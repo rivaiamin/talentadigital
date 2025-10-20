@@ -19,8 +19,10 @@
     </header>
 
     <div class="mt-6 flex items-center gap-3">
-        <a href="/me?/logout" class="btn rounded-full w-32 border border-primary bg-base-content dark:bg-base-content text-primary-content dark:text-primary">Keluar</a>
-        <a href="/me?/password" class="btn btn-primary rounded-full w-32">Ubah sandi</a>
+        <form method='post' action='?/logout'>
+            <button class="btn rounded-full w-32 border border-primary bg-base-content dark:bg-base-content text-primary-content dark:text-primary" type="submit">Keluar</button>
+        </form>
+        <a href="/auth/password" class="btn btn-primary rounded-full w-32">Ubah sandi</a>
     </div>
 
     <section class="mt-8">
