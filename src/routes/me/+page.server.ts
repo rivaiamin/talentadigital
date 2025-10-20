@@ -105,7 +105,8 @@ export const actions: Actions = {
             const arrayBuffer = await blob.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
             const ext = type === 'image/png' ? 'png' : type === 'image/webp' ? 'webp' : 'jpg';
-            const uploadsDir = 'static/uploads';
+            // Use process.cwd() to ensure we're always writing to the correct static directory
+            const uploadsDir = `${process.cwd()}/static/uploads`;
             await ensureDir(uploadsDir);
             const fileName = `${event.locals.user.id}.${ext}`;
             const filePath = `${uploadsDir}/${fileName}`;

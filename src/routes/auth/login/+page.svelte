@@ -59,12 +59,12 @@
     }
 
     function handleLoginSubmit() {
-        if (!validateLoginForm()) return;
+        if (!validateLoginForm()) return { cancel: true };
         isLoading = true;
     }
 
     function handleRegisterSubmit() {
-        if (!validateRegisterForm()) return;
+        if (!validateRegisterForm()) return { cancel: true };
         isLoading = true;
     }
 
