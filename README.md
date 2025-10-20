@@ -1,38 +1,54 @@
-# sv
+# TalentaDigital
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Development
 
-## Creating a project
+1. Install dependencies
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+```bash
+pnpm install
 ```
 
-## Developing
+2. Configure environment
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Create a `.env` file with:
 
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+DATABASE_URL=./.data/dev.sqlite
 ```
 
-## Building
+3. Database (Drizzle)
 
-To create a production version of your app:
+- Push schema to DB (creates tables if missing):
 
-```sh
-npm run build
+```bash
+pnpm db:push
 ```
 
-You can preview the production build with `npm run preview`.
+- Generate migrations from schema changes:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+pnpm db:generate
+```
+
+- Apply migrations:
+
+```bash
+pnpm db:migrate
+```
+
+- Open Drizzle Studio:
+
+```bash
+pnpm db:studio
+```
+
+4. Run dev server
+
+```bash
+pnpm dev
+```
+
+## Notes
+
+- Locale defaults: `id-ID` (language), `Asia/Jakarta` (timezone), currency `IDR`.
+- Registration uses full name and auto-generates a unique username.

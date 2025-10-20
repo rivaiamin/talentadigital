@@ -47,6 +47,7 @@
 	},
 	"dependencies": {
 		"@node-rs/argon2": "^2.0.2",
-		"better-sqlite3": "^12.4.1"
+		"better-sqlite3": "^12.4.1",
+		"daisyui": "^5.3.7"
 	}
 }

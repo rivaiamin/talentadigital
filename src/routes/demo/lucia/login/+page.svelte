@@ -3,7 +3,7 @@
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
-<\/script>
+</script>
 
 <h1>Login/Register</h1>
 <form method="post" action="?/login" use:enhance>

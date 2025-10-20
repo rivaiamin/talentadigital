@@ -8,6 +8,8 @@
 
 ### Features
 - [ ] User registration system
+- [ ] Registration uses full name input; username auto-generated
+- [ ] Users can update username later from profile
 - [ ] Login/logout functionality  
 - [ ] Password change capability
 - [ ] Profile management (basic user info)
@@ -17,6 +19,8 @@
 
 ### Technical Tasks
 - [ ] Set up database schema for users
+- [ ] Implement username generator (unique, slugified from full name)
+- [ ] Add username update flow on profile with uniqueness validation
 - [ ] Implement authentication middleware
 - [ ] Create user session management
 - [ ] Design responsive authentication forms

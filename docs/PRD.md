@@ -3,8 +3,9 @@ TalentaDigital (TD) is a platform simple P2P service platform, people can sell t
 
 ### Non-Functional Requirements
 - Responsive design (Mobile First)
-- Simple and minimalistic design
+- Simple, minimalistic but keep estethic and modern design
 - Dark mode theme
+- Indonesian locale
 - Low barier entry
 - Fast loading times
 - Secure authentication
