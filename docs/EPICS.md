@@ -1,30 +1,30 @@
 # TalentaDigital - Epic Tracking
 
 ## Epic 1: Core Infrastructure & Authentication
-**Status:** 🔄 Not Started  
+**Status:** 🚧 In Progress  
 **Priority:** High  
 **Dependencies:** None  
 **Estimated Effort:** 3-5 days
 
 ### Features
-- [ ] User registration system
-- [ ] Registration uses full name input; username auto-generated
-- [ ] Users can update username later from profile
-- [ ] Login/logout functionality  
-- [ ] Password change capability
-- [ ] Profile management (basic user info)
-- [ ] Database setup with Drizzle ORM
-- [ ] SQLite database configuration
-- [ ] Lucia authentication integration
+- [x] User registration system (username uniqueness ensured, contact uniqueness)
+- [x] Registration uses full name input; username auto-generated (with numeric suffix fallback)
+- [x] Users can update username later from profile
+- [x] Login/logout functionality  
+- [x] Password change capability
+- [x] Profile management (basic user info)
+- [x] Database setup with Drizzle ORM
+- [x] SQLite database configuration
+- [ ] Lucia authentication integration (prototype exists under /demo/lucia; production uses custom auth)
 
 ### Technical Tasks
-- [ ] Set up database schema for users
-- [ ] Implement username generator (unique, slugified from full name)
-- [ ] Add username update flow on profile with uniqueness validation
-- [ ] Implement authentication middleware
-- [ ] Create user session management
-- [ ] Design responsive authentication forms
-- [ ] Add form validation and error handling
+- [x] Set up database schema for users
+- [x] Implement username generator (unique suffix, from provided username)
+- [x] Add username update flow on profile with uniqueness validation
+- [x] Implement authentication middleware (hooks.server session validation)
+- [x] Create user session management (session table, cookie renewal)
+- [x] Design responsive authentication forms
+- [x] Add form validation and error handling
 
 ### NFR Alignment
 - **Low barrier entry:** Minimal required fields; allow browsing without login
@@ -34,23 +34,23 @@
 ---
 
 ## Epic 2: Talent Management System
-**Status:** 🔄 Not Started  
+**Status:** 🚧 In Progress  
 **Priority:** High  
 **Dependencies:** Epic 1  
 **Estimated Effort:** 4-6 days
 
 ### Features
-- [ ] Talent registration (separate from user registration)
-- [ ] Talent profile creation with services, location, contact info
-- [ ] Talent status management (active/inactive)
-- [ ] Edit talent profile (talent-only access)
-- [ ] Talent data validation
+- [x] Talent profile creation with services, location, contact info (auto-created on user registration)
+- [x] Talent status management (active/inactive)
+- [x] Edit talent profile (talent-only access via /me)
+- [x] Talent data validation (basic client/server validation)
+- [ ] Talent registration (separate flow) — optional, not required currently
 
 ### Technical Tasks
-- [ ] Create talent database schema
-- [ ] Implement talent CRUD operations
-- [ ] Build talent profile forms
-- [ ] Add talent-specific authentication checks
+- [x] Create talent database schema
+- [x] Implement talent update operations
+- [x] Build talent profile forms (/me)
+- [x] Add talent-specific authentication checks
 - [ ] Implement draft/save functionality
 
 ### NFR Alignment
@@ -140,14 +140,14 @@
 ---
 
 ## Epic 6: Platform Support & Polish
-**Status:** 🔄 Not Started  
+**Status:** 🚧 In Progress  
 **Priority:** Low  
 **Dependencies:** All previous epics  
 **Estimated Effort:** 4-5 days
 
 ### Features
 - [ ] Donation system for platform support
-- [ ] Dark mode theme implementation
+- [x] Dark mode theme implementation (Theme toggle + persisted)
 - [ ] Performance optimization
 - [ ] Security enhancements
 - [ ] Error handling and user feedback
@@ -186,16 +186,16 @@
 
 ## Progress Tracking
 
-### Overall Progress: 0% (0/6 epics completed)
+### Overall Progress: 20% (some epics partially completed)
 
 | Epic | Status | Progress | Notes |
 |------|--------|----------|-------|
-| Epic 1 | 🔄 Not Started | 0% | |
-| Epic 2 | 🔄 Not Started | 0% | |
+| Epic 1 | 🚧 In Progress | ~70% | Custom auth implemented; Lucia demo only |
+| Epic 2 | 🚧 In Progress | ~50% | Profile edit in /me |
 | Epic 3 | 🔄 Not Started | 0% | |
 | Epic 4 | 🔄 Not Started | 0% | |
 | Epic 5 | 🔄 Not Started | 0% | |
-| Epic 6 | 🔄 Not Started | 0% | |
+| Epic 6 | 🚧 In Progress | ~20% | Theme toggle done |
 
 ### Legend
 - 🔄 Not Started
@@ -207,7 +207,7 @@
 ---
 
 ## Next Steps
-1. Begin Epic 1: Core Infrastructure & Authentication
-2. Set up development environment
-3. Initialize database schema
-4. Implement basic authentication flow
+1. Finish Epic 1: finalize auth (optionally migrate to Lucia or keep custom)
+2. Continue Epic 2: add portfolio CRUD and image upload polish
+3. Start Epic 3: public listing, search/filter, public profile
+4. Add SEO basics: meta tags, sitemap, robots, JSON-LD
