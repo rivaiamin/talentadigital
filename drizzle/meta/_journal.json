@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1760954885928,
+      "tag": "0000_goofy_rafael_vega",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1760955711466,
+      "tag": "0001_soft_riptide",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1760956920204,
+      "tag": "0002_whole_goliath",
+      "breakpoints": true
+    }
+  ]
+}

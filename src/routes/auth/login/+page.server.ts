@@ -18,23 +18,27 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
     login: async (event) => {
         const formData = await event.request.formData();
-        const username = formData.get('username');
+        const identity = formData.get('identity');
         const password = formData.get('password');
 
-        if (!validateUsername(username)) {
+        if (!validateIdentity(identity)) {
             return fail(400, {
-                message: 'Username tidak valid (min 3, max 31 karakter, huruf/angka saja)'
+                message: 'Username atau nomor kontak tidak valid (min 3, max 31 karakter)'
             });
         }
         if (!validatePassword(password)) {
             return fail(400, { message: 'Kata sandi tidak valid (min 6, max 255 karakter)' });
         }
 
-        const results = await db.select().from(table.user).where(eq(table.user.username, username));
+        // Try to find user by username first, then by contact number
+        let results = await db.select().from(table.user).where(eq(table.user.username, identity));
+        if (results.length === 0) {
+            results = await db.select().from(table.user).where(eq(table.user.contactNumber, identity));
+        }
 
         const existingUser = results.at(0);
         if (!existingUser) {
-            return fail(400, { message: 'Nama pengguna atau kata sandi salah' });
+            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah' });
         }
 
         const validPassword = await verify(existingUser.passwordHash, password, {
@@ -44,7 +48,7 @@ export const actions: Actions = {
             parallelism: 1
         });
         if (!validPassword) {
-            return fail(400, { message: 'Nama pengguna atau kata sandi salah' });
+            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah' });
         }
 
         const sessionToken = auth.generateSessionToken();
@@ -56,10 +60,14 @@ export const actions: Actions = {
     register: async (event) => {
         const formData = await event.request.formData();
         const fullName = formData.get('fullName');
+        const contactNumber = formData.get('contactNumber');
         const password = formData.get('password');
 
         if (!validateFullName(fullName)) {
             return fail(400, { message: 'Nama lengkap tidak valid (min 2, max 100 karakter)' });
+        }
+        if (!validateContactNumber(contactNumber)) {
+            return fail(400, { message: 'Nomor kontak tidak valid (min 10, max 15 digit)' });
         }
         if (!validatePassword(password)) {
             return fail(400, { message: 'Kata sandi tidak valid' });
@@ -75,6 +83,12 @@ export const actions: Actions = {
         });
 
         try {
+            // Check if contact number already exists
+            const existingContact = await db.select().from(table.user).where(eq(table.user.contactNumber, contactNumber));
+            if (existingContact.length > 0) {
+                return fail(400, { message: 'Nomor kontak sudah terdaftar' });
+            }
+
             // Ensure username is unique by adding suffix if needed
             let finalUsername = username;
             let counter = 1;
@@ -88,8 +102,21 @@ export const actions: Actions = {
             await db.insert(table.user).values({ 
                 id: userId, 
                 fullName, 
-                username: finalUsername, 
+                username: finalUsername,
+                contactNumber,
                 passwordHash 
+            });
+
+            // Create initial talent profile linked to this user
+            await db.insert(table.talent).values({
+                id: userId, // use same id for 1:1 mapping convenience
+                userId: userId,
+                name: fullName,
+                services: JSON.stringify([]),
+                status: 'active',
+                location: null,
+                contactNumber: contactNumber,
+                description: null
             });
 
             const sessionToken = auth.generateSessionToken();
@@ -108,12 +135,11 @@ function generateUserId() {
     return id;
 }
 
-function validateUsername(username: unknown): username is string {
+function validateIdentity(identity: unknown): identity is string {
     return (
-        typeof username === 'string' &&
-        username.length >= 3 &&
-        username.length <= 31 &&
-        /^[a-z0-9_-]+$/.test(username)
+        typeof identity === 'string' &&
+        identity.length >= 3 &&
+        identity.length <= 31
     );
 }
 
@@ -123,6 +149,15 @@ function validatePassword(password: unknown): password is string {
 
 function validateFullName(fullName: unknown): fullName is string {
     return typeof fullName === 'string' && fullName.length >= 2 && fullName.length <= 100;
+}
+
+function validateContactNumber(contactNumber: unknown): contactNumber is string {
+    return (
+        typeof contactNumber === 'string' &&
+        contactNumber.length >= 10 &&
+        contactNumber.length <= 15 &&
+        /^[0-9]+$/.test(contactNumber)
+    );
 }
 
 

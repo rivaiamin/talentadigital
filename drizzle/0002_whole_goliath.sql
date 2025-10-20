@@ -1,0 +1,1 @@
+ALTER TABLE `talent` ADD `picture_url` text;
