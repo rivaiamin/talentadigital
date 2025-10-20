@@ -11,7 +11,7 @@
         <p class="mt-2 text-sm text-base-content/70">Temukan dan hubungkan dengan para talent terbaik.</p>
 
         <div class="mt-8 flex flex-col items-center gap-3">
-            <a href="/demo" class="btn btn-primary btn-lg rounded-full w-48">Cari Talent</a>
+            <a href="/talents" class="btn btn-primary btn-lg rounded-full w-48">Cari Talent</a>
             <a href="/auth/login" class="btn btn-lg rounded-full w-48 bg-base-content text-primary-content dark:text-primary border border-primary">Jadi Talent</a>
         </div>
     </div>
