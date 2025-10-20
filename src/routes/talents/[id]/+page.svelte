@@ -37,6 +37,13 @@
     </section>
     {/if}
 
+    {#if t.portfolioUrl}
+    <section>
+        <h2 class="text-xl font-medium mb-2">Portofolio</h2>
+        <a href={t.portfolioUrl} target="_blank" rel="noopener noreferrer" class="text-link-content hover:underline">{t.portfolioUrl}</a>
+    </section>
+    {/if}
+
     {#if t.contactNumber}
     <section class="mt-4">
         <a class="btn btn-primary w-full rounded-full" href={`https://wa.me/${t.contactNumber}`} target="_blank" rel="noopener noreferrer">Kontak via WhatsApp</a>

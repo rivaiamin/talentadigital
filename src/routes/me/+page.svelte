@@ -51,6 +51,15 @@
                 <span>Profil berhasil disimpan</span>
             </div>
         {/if}
+        
+        {#if form?.message}
+            <div class="alert alert-error mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{form.message}</span>
+            </div>
+        {/if}
         <form method='post' action='?/update' enctype="multipart/form-data" use:enhance class="mt-4 space-y-6 rounded-xl border border-base-300 bg-base-100 p-6 shadow">
             <div class="form-control w-full">
                 <label class="label" for="fullName"><span class="label-text">Nama lengkap</span></label>
@@ -58,7 +67,7 @@
             </div>
             <div class="form-control w-full">
                 <label class="label" for="username"><span class="label-text">Username</span></label>
-                <input id="username" name='username' value={data.user.username} minlength='3' maxlength='31' pattern='[a-z0-9_-]+' class="input input-bordered w-full mt-2" />
+                <input id="username" name='username' value={data.user.username} minlength='3' maxlength='31' pattern='^[a-z0-9_-]+$' class="input input-bordered w-full mt-2" />
             </div>
 
             <h3 class="text-xl font-semibold pt-2">Talenta</h3>
@@ -76,6 +85,11 @@
             <div class="form-control w-full">
                 <label class="label" for="location"><span class="label-text">Lokasi</span></label>
                 <input id="location" name='location' value={data.talent?.location || ''} class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="portfolioUrl"><span class="label-text">Tautan Portofolio</span></label>
+                <input id="portfolioUrl" name='portfolioUrl' value={data.talent?.portfolioUrl || ''} type="url" placeholder="https://contoh.com/portofolio" class="input input-bordered w-full mt-2" />
+                <p class="text-xs text-base-content/70 mt-1">Contoh: https://dribbble.com/nama, https://github.com/nama, atau situs pribadi</p>
             </div>
             <div class="form-control w-full">
                 <label class="label" for="contactNumber"><span class="label-text">Nomor kontak</span></label>

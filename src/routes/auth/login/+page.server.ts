@@ -126,7 +126,8 @@ export const actions: Actions = {
                 status: 'active',
                 location: null,
                 contactNumber: contactNumber,
-                description: null
+                description: null,
+                portfolioUrl: null
             });
 
             const sessionToken = auth.generateSessionToken();

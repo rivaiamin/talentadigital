@@ -37,6 +37,7 @@ export const actions: Actions = {
         const servicesRaw = formData.get('services');
         const status = formData.get('status');
         const location = formData.get('location');
+        const portfolioUrl = formData.get('portfolioUrl');
         const contactNumber = formData.get('contactNumber');
         const description = formData.get('description');
         const picture = formData.get('picture');
@@ -63,7 +64,12 @@ export const actions: Actions = {
         }
         // Update user first
         if (Object.keys(updates).length > 0) {
-            await db.update(table.user).set(updates).where(eq(table.user.id, event.locals.user.id));
+            try {
+                await db.update(table.user).set(updates).where(eq(table.user.id, event.locals.user.id));
+            } catch (error) {
+                console.error('Error updating user:', error);
+                return fail(500, { message: 'Gagal memperbarui profil pengguna' });
+            }
         }
 
         // Build talent updates
@@ -80,6 +86,13 @@ export const actions: Actions = {
         }
         if (typeof location === 'string') {
             talentUpdates.location = location.trim() === '' ? '' : location.trim();
+        }
+        if (typeof portfolioUrl === 'string') {
+            const raw = portfolioUrl.trim();
+            const normalized = raw === ''
+                ? ''
+                : (/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+            talentUpdates.portfolioUrl = normalized;
         }
         if (typeof contactNumber === 'string') {
             // Normalize leading 0 to 62
@@ -103,8 +116,9 @@ export const actions: Actions = {
                 return fail(400, { message: 'Ukuran gambar melebihi 2MB' });
             }
             const type = blob.type;
-            if (!/^image\/(png|jpe?g|webp)$/.test(type)) {
-                return fail(400, { message: 'Format gambar tidak didukung' });
+            if (!/^image\/(png|jpeg|jpg|webp)$/i.test(type)) {
+                console.log('Rejected image type:', type);
+                return fail(400, { message: `Format gambar tidak didukung. Format yang diterima: PNG, JPEG, JPG, WebP. Format yang dikirim: ${type}` });
             }
             const arrayBuffer = await blob.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
@@ -119,27 +133,33 @@ export const actions: Actions = {
         }
 
         if (Object.keys(talentUpdates).length > 0) {
-            const [existing] = await db
-                .select()
-                .from(table.talent)
-                .where(eq(table.talent.userId, event.locals.user.id));
-            if (existing) {
-                await db.update(table.talent).set({
-                    ...talentUpdates,
-                    // keep talent.name in sync with user.fullName if provided
-                    ...(updates.fullName ? { name: updates.fullName } : {})
-                }).where(eq(table.talent.id, existing.id));
-            } else {
-                await db.insert(table.talent).values({
-                    id: event.locals.user.id,
-                    userId: event.locals.user.id,
-                    name: updates.fullName || event.locals.user.fullName || event.locals.user.username,
-                    services: talentUpdates.services ?? JSON.stringify([]),
-                    status: talentUpdates.status || 'active',
-                    location: talentUpdates.location ?? null,
-                    contactNumber: talentUpdates.contactNumber ?? null,
-                    description: talentUpdates.description ?? null
-                });
+            try {
+                const [existing] = await db
+                    .select()
+                    .from(table.talent)
+                    .where(eq(table.talent.userId, event.locals.user.id));
+                if (existing) {
+                    await db.update(table.talent).set({
+                        ...talentUpdates,
+                        // keep talent.name in sync with user.fullName if provided
+                        ...(updates.fullName ? { name: updates.fullName } : {})
+                    }).where(eq(table.talent.id, existing.id));
+                } else {
+                    await db.insert(table.talent).values({
+                        id: event.locals.user.id,
+                        userId: event.locals.user.id,
+                        name: updates.fullName || event.locals.user.fullName || event.locals.user.username,
+                        services: talentUpdates.services ?? JSON.stringify([]),
+                        status: talentUpdates.status || 'active',
+                        location: talentUpdates.location ?? null,
+                        contactNumber: talentUpdates.contactNumber ?? null,
+                        description: talentUpdates.description ?? null,
+                        portfolioUrl: talentUpdates.portfolioUrl ?? null
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating talent:', error);
+                return fail(500, { message: 'Gagal memperbarui profil talenta' });
             }
         }
 

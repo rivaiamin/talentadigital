@@ -35,7 +35,8 @@ export const talent = sqliteTable('talent', {
     location: text('location'),
     contactNumber: text('contact_number'),
     description: text('description'),
-    pictureUrl: text('picture_url')
+    pictureUrl: text('picture_url'),
+    portfolioUrl: text('portfolio_url')
 });
 
 export const talentPortfolio = sqliteTable('talent_portfolio', {
