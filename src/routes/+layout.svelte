@@ -8,7 +8,11 @@
 	let { children } = $props();
 
 	onMount(() => {
-		initTheme();
+		// Only initialize theme if it wasn't already set by the inline script
+		const currentTheme = document.documentElement.getAttribute('data-theme');
+		if (!currentTheme) {
+			initTheme();
+		}
 	});
 </script>
 
@@ -17,10 +21,20 @@
 	<script>
 		// Initialize theme immediately to prevent flash
 		(function() {
+			try {
 				const stored = localStorage.getItem('theme');
 				const theme = stored || 'dark';
 				document.documentElement.classList.toggle('dark', theme === 'dark');
 				document.documentElement.setAttribute('data-theme', theme);
+				// Store the theme to ensure consistency
+				if (!stored) {
+					localStorage.setItem('theme', theme);
+				}
+			} catch (error) {
+				// Fallback to dark theme if localStorage fails
+				document.documentElement.classList.add('dark');
+				document.documentElement.setAttribute('data-theme', 'dark');
+			}
 		})();
 	</script>
 </svelte:head>
@@ -48,7 +62,7 @@
     </main>
     <footer class="inset-x-0 bottom-0 mx-auto max-w-screen-sm px-4 py-6 text-xs text-base-content/60 text-center z-20">
         <div>
-            <a href="#" class="text-lg text-base-content/80 underline decoration-primary/60 underline-offset-4">Donasi</a>
+            <a href="/donasi" class="text-lg text-base-content/80 underline decoration-primary/60 underline-offset-4">Donasi</a>
         </div>
 
         <!-- Decorative elements similar to reference image -->
