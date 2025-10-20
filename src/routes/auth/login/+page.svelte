@@ -58,12 +58,28 @@
         return Object.keys(registerErrors).length === 0;
     }
 
-    function handleLoginSubmit() {
+    function normalizePhoneInput(value: string): string {
+        const digitsOnly = value.replace(/\D+/g, '');
+        if (digitsOnly.startsWith('0')) {
+            return '62' + digitsOnly.slice(1);
+        }
+        return digitsOnly;
+    }
+
+    function handleRegisterContactInput(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const normalized = normalizePhoneInput(input.value);
+        if (input.value !== normalized) {
+            input.value = normalized;
+        }
+    }
+
+    function handleLoginSubmit(): any {
         if (!validateLoginForm()) return { cancel: true };
         isLoading = true;
     }
 
-    function handleRegisterSubmit() {
+    function handleRegisterSubmit(): any {
         if (!validateRegisterForm()) return { cancel: true };
         isLoading = true;
     }
@@ -72,6 +88,11 @@
     $effect(() => {
         if (form?.message) {
             isLoading = false;
+            if (form.action === 'login') {
+                activeTab = 'login';
+            } else if (form.action === 'register') {
+                activeTab = 'register';
+            }
         }
     });
 </script>
@@ -253,6 +274,7 @@
                                 placeholder="Masukkan nomor kontak (contoh: 08123456789)"
                                 aria-invalid={registerErrors.contactNumber ? 'true' : 'false'}
                                 aria-describedby={registerErrors.contactNumber ? 'contact-error' : undefined}
+                                oninput={handleRegisterContactInput}
                             />
                             {#if registerErrors.contactNumber}
                                 <div id="contact-error" class="label">
@@ -300,21 +322,23 @@
                 </div>
                 {/if}
 
-                <!-- Additional links and messages -->
-                <div class="text-center space-y-4 mt-6">
-                    {#if activeTab === 'login'}
-                        <a href="/auth/password" class="link link-content text-sm hover:link-hover">
-                            Lupa kata sandi?
-                        </a>
-                    {/if}
-                    
-                    {#if form?.message}
+                {#if form?.message}
+                    <div class="text-center">
                         <div class="alert alert-error">
                             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span class="text-sm">{form.message}</span>
                         </div>
+                    </div>
+                {/if}
+
+                <!-- Additional links and messages -->
+                <div class="text-center space-y-4 mt-6">
+                    {#if activeTab === 'login'}
+                        <a href="/auth/password" class="link link-content text-sm hover:link-hover">
+                            Lupa kata sandi?
+                        </a>
                     {/if}
                 </div>
             </div>

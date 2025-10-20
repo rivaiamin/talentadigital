@@ -82,10 +82,14 @@ export const actions: Actions = {
             talentUpdates.location = location.trim() === '' ? '' : location.trim();
         }
         if (typeof contactNumber === 'string') {
-            if (contactNumber.trim() !== '' && !/^[0-9]+$/.test(contactNumber)) {
+            // Normalize leading 0 to 62
+            const normalized = contactNumber.trim().startsWith('0')
+                ? ('62' + contactNumber.trim().slice(1))
+                : contactNumber.trim();
+            if (normalized !== '' && !/^[0-9]+$/.test(normalized)) {
                 return fail(400, { message: 'Nomor kontak tidak valid (hanya angka)' });
             }
-            talentUpdates.contactNumber = contactNumber.trim() === '' ? '' : contactNumber.trim();
+            talentUpdates.contactNumber = normalized === '' ? '' : normalized;
         }
         if (typeof description === 'string') {
             talentUpdates.description = description.trim() === '' ? '' : description.trim();

@@ -23,22 +23,27 @@ export const actions: Actions = {
 
         if (!validateIdentity(identity)) {
             return fail(400, {
-                message: 'Username atau nomor kontak tidak valid (min 3, max 31 karakter)'
+                message: 'Username atau nomor kontak tidak valid (min 3, max 31 karakter)',
+                action: 'login'
             });
         }
         if (!validatePassword(password)) {
-            return fail(400, { message: 'Kata sandi tidak valid (min 6, max 255 karakter)' });
+            return fail(400, { message: 'Kata sandi tidak valid (min 6, max 255 karakter)', action: 'login' });
         }
 
         // Try to find user by username first, then by contact number
         let results = await db.select().from(table.user).where(eq(table.user.username, identity));
         if (results.length === 0) {
-            results = await db.select().from(table.user).where(eq(table.user.contactNumber, identity));
+            // Normalize identity if it looks like a phone number starting with 0
+            const normalizedIdentity = (typeof identity === 'string' && /^\d+$/.test(identity) && identity.startsWith('0'))
+                ? ('62' + identity.slice(1))
+                : identity;
+            results = await db.select().from(table.user).where(eq(table.user.contactNumber, normalizedIdentity));
         }
 
         const existingUser = results.at(0);
         if (!existingUser) {
-            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah' });
+            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah', action: 'login' });
         }
 
         const validPassword = await verify(existingUser.passwordHash, password, {
@@ -48,7 +53,7 @@ export const actions: Actions = {
             parallelism: 1
         });
         if (!validPassword) {
-            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah' });
+            return fail(400, { message: 'Username/nomor kontak atau kata sandi salah', action: 'login' });
         }
 
         const sessionToken = auth.generateSessionToken();
@@ -60,17 +65,22 @@ export const actions: Actions = {
     register: async (event) => {
         const formData = await event.request.formData();
         const fullName = formData.get('fullName');
-        const contactNumber = formData.get('contactNumber');
+        let contactNumber = formData.get('contactNumber');
         const password = formData.get('password');
 
         if (!validateFullName(fullName)) {
-            return fail(400, { message: 'Nama lengkap tidak valid (min 2, max 100 karakter)' });
+            return fail(400, { message: 'Nama lengkap tidak valid (min 2, max 100 karakter)', action: 'register' });
         }
+        // Normalize leading 0 to 62 for Indonesia
+        if (typeof contactNumber === 'string' && contactNumber.startsWith('0')) {
+            contactNumber = '62' + contactNumber.slice(1);
+        }
+
         if (!validateContactNumber(contactNumber)) {
-            return fail(400, { message: 'Nomor kontak tidak valid (min 10, max 15 digit)' });
+            return fail(400, { message: 'Nomor kontak tidak valid (min 10, max 15 digit)', action: 'register' });
         }
         if (!validatePassword(password)) {
-            return fail(400, { message: 'Kata sandi tidak valid' });
+            return fail(400, { message: 'Kata sandi tidak valid', action: 'register' });
         }
 
         const userId = generateUserId();
@@ -86,7 +96,7 @@ export const actions: Actions = {
             // Check if contact number already exists
             const existingContact = await db.select().from(table.user).where(eq(table.user.contactNumber, contactNumber));
             if (existingContact.length > 0) {
-                return fail(400, { message: 'Nomor kontak sudah terdaftar' });
+                return fail(400, { message: 'Nomor kontak sudah terdaftar', action: 'register' });
             }
 
             // Ensure username is unique by adding suffix if needed
@@ -124,7 +134,7 @@ export const actions: Actions = {
             auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
         } catch (error) {
             console.error('Registration error:', error);
-            return fail(500, { message: 'Terjadi kesalahan saat mendaftar' });
+            return fail(500, { message: 'Terjadi kesalahan saat mendaftar', action: 'register' });
         }
         return redirect(302, '/me');
     }

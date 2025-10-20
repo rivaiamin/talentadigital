@@ -10,6 +10,22 @@
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         previewUrl = file ? URL.createObjectURL(file) : null;
     }
+
+    function normalizePhoneInput(value: string): string {
+        const digitsOnly = value.replace(/\D+/g, '');
+        if (digitsOnly.startsWith('0')) {
+            return '62' + digitsOnly.slice(1);
+        }
+        return digitsOnly;
+    }
+
+    function handleProfileContactInput(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const normalized = normalizePhoneInput(input.value);
+        if (input.value !== normalized) {
+            input.value = normalized;
+        }
+    }
 </script>
 
 <div class="max-w-screen-sm mx-auto px-4 py-6 text-base-content">
@@ -63,7 +79,7 @@
             </div>
             <div class="form-control w-full">
                 <label class="label" for="contactNumber"><span class="label-text">Nomor kontak</span></label>
-                <input id="contactNumber" name='contactNumber' value={data.talent?.contactNumber || data.user.contactNumber || ''} inputmode="numeric" pattern="[0-9]*" class="input input-bordered w-full mt-2" />
+                <input id="contactNumber" name='contactNumber' value={data.talent?.contactNumber || data.user.contactNumber || ''} inputmode="numeric" pattern="[0-9]*" class="input input-bordered w-full mt-2" oninput={handleProfileContactInput} />
             </div>
             <div class="form-control w-full">
                 <label class="label" for="description"><span class="label-text">Deskripsi</span></label>
