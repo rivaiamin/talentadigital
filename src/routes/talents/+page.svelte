@@ -34,20 +34,32 @@
     {:else}
         <ul class="grid gap-3">
             {#each data.talents as t}
-            <li class="bg-base-200 rounded-xl p-3 flex gap-3">
-                <img src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'} alt={t.name} class="w-16 h-16 object-cover rounded-lg" loading="lazy" />
-                <div class="flex-1 min-w-0">
-                    <a class="font-semibold hover:underline" href={`/talents/${t.id}`}>{t.name}</a>
-                    <div class="text-sm text-base-content/70 truncate">{t.description}</div>
+            <li class="bg-base-200 rounded-xl p-3 flex gap-3 max-w-full" style="max-width:100%;">
+                <img 
+                    src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'} 
+                    alt={t.name} 
+                    class="w-16 h-16 object-cover rounded-lg flex-shrink-0" 
+                    loading="lazy"
+                    style="max-width:4rem;max-height:4rem;"
+                />
+                <div class="flex-1 min-w-0 max-w-full" style="max-width:100%;">
+                    <a class="font-semibold hover:underline block max-w-full truncate" href={`/talents/${t.id}`}>{t.name}</a>
+                    <div class="text-sm text-base-content/70 break-words max-w-full">{t.description}</div>
                     {#if t.services?.length}
-                    <div class="mt-2 flex flex-wrap gap-2">
+                    <div class="mt-2 flex flex-wrap gap-2 max-w-full" style="overflow-x:auto;">
                         {#each t.services as s}
-                        <span class="badge badge-outline">{s}</span>
+                        <span class="badge badge-outline max-w-full truncate">{s}</span>
                         {/each}
                     </div>
                     {/if}
                     {#if t.location}
-                    <div class="text-xs text-base-content/60 mt-1">{t.location}</div>
+                    <div class="text-xs text-base-content/60 mt-1 max-w-full truncate flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span class="max-w-full truncate">{t.location}</span>
+                    </div>
                     {/if}
                 </div>
             </li>
