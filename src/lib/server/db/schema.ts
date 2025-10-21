@@ -36,7 +36,14 @@ export const talent = sqliteTable('talent', {
     contactNumber: text('contact_number'),
     description: text('description'),
     pictureUrl: text('picture_url'),
-    portfolioUrl: text('portfolio_url')
+    portfolioUrl: text('portfolio_url'),
+    // Social media URLs
+    instagramUrl: text('instagram_url'),
+    twitterUrl: text('twitter_url'),
+    linkedinUrl: text('linkedin_url'),
+    githubUrl: text('github_url'),
+    dribbbleUrl: text('dribbble_url'),
+    behanceUrl: text('behance_url')
 });
 
 export const talentPortfolio = sqliteTable('talent_portfolio', {

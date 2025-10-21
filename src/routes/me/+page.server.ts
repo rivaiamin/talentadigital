@@ -41,6 +41,13 @@ export const actions: Actions = {
         const contactNumber = formData.get('contactNumber');
         const description = formData.get('description');
         const picture = formData.get('picture');
+        // Social media URLs
+        const instagramUrl = formData.get('instagramUrl');
+        const twitterUrl = formData.get('twitterUrl');
+        const linkedinUrl = formData.get('linkedinUrl');
+        const githubUrl = formData.get('githubUrl');
+        const dribbbleUrl = formData.get('dribbbleUrl');
+        const behanceUrl = formData.get('behanceUrl');
         
         const updates: Record<string, string> = {};
         
@@ -107,9 +114,29 @@ export const actions: Actions = {
         if (typeof description === 'string') {
             talentUpdates.description = description.trim() === '' ? '' : description.trim();
         }
+        
+        // Handle social media URLs
+        const socialMediaFields = [
+            { key: 'instagramUrl', value: instagramUrl },
+            { key: 'twitterUrl', value: twitterUrl },
+            { key: 'linkedinUrl', value: linkedinUrl },
+            { key: 'githubUrl', value: githubUrl },
+            { key: 'dribbbleUrl', value: dribbbleUrl },
+            { key: 'behanceUrl', value: behanceUrl }
+        ];
+        
+        for (const field of socialMediaFields) {
+            if (typeof field.value === 'string') {
+                const raw = field.value.trim();
+                const normalized = raw === ''
+                    ? ''
+                    : (/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+                talentUpdates[field.key] = normalized;
+            }
+        }
 
         // Handle image upload
-        if (picture && picture instanceof File) {
+        if (picture && picture instanceof File && picture.size > 0) {
             const blob = picture as File;
             const sizeLimit = 2 * 1024 * 1024; // 2MB
             if (blob.size > sizeLimit) {
@@ -154,7 +181,13 @@ export const actions: Actions = {
                         location: talentUpdates.location ?? null,
                         contactNumber: talentUpdates.contactNumber ?? null,
                         description: talentUpdates.description ?? null,
-                        portfolioUrl: talentUpdates.portfolioUrl ?? null
+                        portfolioUrl: talentUpdates.portfolioUrl ?? null,
+                        instagramUrl: talentUpdates.instagramUrl ?? null,
+                        twitterUrl: talentUpdates.twitterUrl ?? null,
+                        linkedinUrl: talentUpdates.linkedinUrl ?? null,
+                        githubUrl: talentUpdates.githubUrl ?? null,
+                        dribbbleUrl: talentUpdates.dribbbleUrl ?? null,
+                        behanceUrl: talentUpdates.behanceUrl ?? null
                     });
                 }
             } catch (error) {

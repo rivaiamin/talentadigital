@@ -91,6 +91,32 @@
                 <input id="portfolioUrl" name='portfolioUrl' value={data.talent?.portfolioUrl || ''} type="url" placeholder="https://contoh.com/portofolio" class="input input-bordered w-full mt-2" />
                 <p class="text-xs text-base-content/70 mt-1">Contoh: https://dribbble.com/nama, https://github.com/nama, atau situs pribadi</p>
             </div>
+            
+            <h3 class="text-xl font-semibold pt-4">Media Sosial</h3>
+            <div class="form-control w-full">
+                <label class="label" for="instagramUrl"><span class="label-text">Instagram</span></label>
+                <input id="instagramUrl" name='instagramUrl' value={data.talent?.instagramUrl || ''} type="url" placeholder="https://instagram.com/username" class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="twitterUrl"><span class="label-text">Twitter/X</span></label>
+                <input id="twitterUrl" name='twitterUrl' value={data.talent?.twitterUrl || ''} type="url" placeholder="https://twitter.com/username" class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="linkedinUrl"><span class="label-text">LinkedIn</span></label>
+                <input id="linkedinUrl" name='linkedinUrl' value={data.talent?.linkedinUrl || ''} type="url" placeholder="https://linkedin.com/in/username" class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="githubUrl"><span class="label-text">GitHub</span></label>
+                <input id="githubUrl" name='githubUrl' value={data.talent?.githubUrl || ''} type="url" placeholder="https://github.com/username" class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="dribbbleUrl"><span class="label-text">Dribbble</span></label>
+                <input id="dribbbleUrl" name='dribbbleUrl' value={data.talent?.dribbbleUrl || ''} type="url" placeholder="https://dribbble.com/username" class="input input-bordered w-full mt-2" />
+            </div>
+            <div class="form-control w-full">
+                <label class="label" for="behanceUrl"><span class="label-text">Behance</span></label>
+                <input id="behanceUrl" name='behanceUrl' value={data.talent?.behanceUrl || ''} type="url" placeholder="https://behance.net/username" class="input input-bordered w-full mt-2" />
+            </div>
             <div class="form-control w-full">
                 <label class="label" for="contactNumber"><span class="label-text">Nomor kontak</span></label>
                 <input id="contactNumber" name='contactNumber' value={data.talent?.contactNumber || data.user.contactNumber || ''} inputmode="numeric" pattern="[0-9]*" class="input input-bordered w-full mt-2" oninput={handleProfileContactInput} />
