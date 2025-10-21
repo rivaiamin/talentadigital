@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/logo.svg';
     import { initTheme } from '$lib/theme';
     import ThemeToggle from '$lib/ThemeToggle.svelte';
 	import { onMount } from 'svelte';
@@ -44,7 +44,10 @@
     {#if $page.url.pathname !== '/'}
     <header class="sticky top-0 z-10  border-base-300 bg-base-100/80 backdrop-blur">
         <div class="mx-auto max-w-screen-sm px-4 py-3 flex items-center justify-between">
-            <a href="/" class="font-semibold">TalentaDigital</a>
+            <a href="/" class="font-semibold flex items-center gap-2">
+                <img src="{favicon}" alt="" class="h-8">
+                <span>TalentaDigital</span>
+            </a>
             <div class="flex items-center gap-2">
                 <ThemeToggle />
                 <a href="/me" class="btn btn-circle btn-sm btn-primary flex items-center gap-2" aria-label="Profil">

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import logo from '$lib/assets/favicon.svg';
+    import logo from '$lib/assets/logo.svg';
 </script>
 
 <section class="min-h-[70dvh] grid place-items-center">
     <div class="w-full max-w-sm text-center mt-12">
-        <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-red-600/10 ring-1 ring-red-500/20">
+        <div class="mx-auto mb-6 grid h-32 w-32 place-items-center rounded-full bg-red-600/10 ring-1 ring-red-500/20">
             <img src={logo} alt="Logo" class="h-16 w-16" />
         </div>
         <h1 class="text-3xl font-semibold tracking-tight">Selamat datang</h1>
