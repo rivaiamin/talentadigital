@@ -88,7 +88,7 @@ export const actions: Actions = {
                 .filter((s) => s.length > 0);
             talentUpdates.services = JSON.stringify(arr);
         }
-        if (status === 'active' || status === 'inactive') {
+        if (status === 'online' || status === 'offline') {
             talentUpdates.status = status;
         }
         if (typeof location === 'string') {
@@ -177,7 +177,7 @@ export const actions: Actions = {
                         userId: event.locals.user.id,
                         name: updates.fullName || event.locals.user.fullName || event.locals.user.username,
                         services: talentUpdates.services ?? JSON.stringify([]),
-                        status: talentUpdates.status || 'active',
+                        status: talentUpdates.status || 'online',
                         location: talentUpdates.location ?? null,
                         contactNumber: talentUpdates.contactNumber ?? null,
                         description: talentUpdates.description ?? null,

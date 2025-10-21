@@ -30,7 +30,7 @@ export const talent = sqliteTable('talent', {
     name: text('name').notNull(),
     // Stored as JSON string of string[]
     services: text('services'),
-    // 'active' | 'inactive'
+    // 'online' | 'offline'
     status: text('status').notNull(),
     location: text('location'),
     contactNumber: text('contact_number'),

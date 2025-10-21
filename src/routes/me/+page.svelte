@@ -78,8 +78,8 @@
             <div class="form-control w-full">
                 <label class="label" for="status"><span class="label-text">Status</span></label>
                 <select id="status" name='status' class="select select-bordered w-full mt-2">
-                    <option value="active" selected={data.talent?.status !== 'inactive'}>Aktif</option>
-                    <option value="inactive" selected={data.talent?.status === 'inactive'}>Nonaktif</option>
+                    <option value="online" selected={data.talent?.status !== 'offline'}>Online</option>
+                    <option value="offline" selected={data.talent?.status === 'offline'}>Offline</option>
                 </select>
             </div>
             <div class="form-control w-full">

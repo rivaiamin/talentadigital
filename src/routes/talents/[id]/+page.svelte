@@ -14,9 +14,28 @@
     <header class="grid gap-2 text-center">
         <img src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'} alt={t.name} class="w-32 h-32 object-cover rounded-full mx-auto" />
         <h1 class="text-3xl font-semibold tracking-tight">{t.name}</h1>
-        {#if t.location}
-        <div class="text-sm text-base-content/70">{t.location}</div>
-        {/if}
+        <div class="flex items-center justify-center gap-4 text-sm">
+            {#if t.status === 'online'}
+                <div class="badge badge-outline badge-success gap-1">
+                    <div class="w-2 h-2 bg-success rounded-full"></div>
+                    Online
+                </div>
+            {:else}
+                <div class="badge badge-outline badge-ghost gap-1">
+                    <div class="w-2 h-2 bg-base-content/50 rounded-full"></div>
+                    Offline
+                </div>
+            {/if}
+            {#if t.location}
+                <div class="flex items-center gap-1 text-base-content/70">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="align-middle">{t.location}</span>
+                </div>
+            {/if}
+        </div>
     </header>
 
     {#if t.services?.length}

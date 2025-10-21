@@ -22,8 +22,8 @@
         </div>
         <div class="flex items-center gap-3">
             <select name="status" bind:value={status} class="select select-bordered">
-                <option value="active">Aktif</option>
-                <option value="inactive">Tidak Aktif</option>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
             </select>
             <button class="btn btn-primary">Cari</button>
         </div>

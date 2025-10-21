@@ -7,7 +7,7 @@ type Filters = {
     q: string | null;
     service: string | null;
     location: string | null;
-    status: 'active' | 'inactive' | null;
+    status: 'online' | 'offline' | null;
     page: number;
     pageSize: number;
 };
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ url }) => {
         q: url.searchParams.get('q'),
         service: url.searchParams.get('service'),
         location: url.searchParams.get('location'),
-        status: (url.searchParams.get('status') as 'active' | 'inactive' | null) ?? null,
+        status: (url.searchParams.get('status') as 'online' | 'offline' | null) ?? null,
         page: Math.max(1, Number(url.searchParams.get('page') || '1')),
         pageSize: Math.min(50, Math.max(1, Number(url.searchParams.get('pageSize') || '10')))
     };
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ url }) => {
     if (filters.status) {
         conditions.push(eq(table.talent.status, filters.status));
     } else {
-        conditions.push(eq(table.talent.status, 'active'));
+        conditions.push(eq(table.talent.status, 'online'));
     }
 
     if (filters.q && filters.q.trim() !== '') {
@@ -88,7 +88,7 @@ export const load: PageServerLoad = async ({ url }) => {
             q: filters.q || '',
             service: filters.service || '',
             location: filters.location || '',
-            status: filters.status || 'active'
+            status: filters.status || 'online'
         }
     };
 };

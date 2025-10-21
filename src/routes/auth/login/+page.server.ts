@@ -123,7 +123,7 @@ export const actions: Actions = {
                 userId: userId,
                 name: fullName,
                 services: JSON.stringify([]),
-                status: 'active',
+                status: 'online',
                 location: null,
                 contactNumber: contactNumber,
                 description: null,

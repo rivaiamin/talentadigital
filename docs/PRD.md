@@ -41,7 +41,7 @@ TalentaDigital (TD) is a platform simple P2P service platform, people can sell t
     - user_id: text → references user.id (1:1)
     - name: text
     - services: text (JSON string of string[])
-    - status: text ('active' | 'inactive')
+    - status: text ('online' | 'offline')
     - location: text | null
     - contact_number: text | null
     - description: text | null

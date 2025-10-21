@@ -41,7 +41,7 @@
 
 ### Features
 - [x] Talent profile creation with services, location, contact info (auto-created on user registration)
-- [x] Talent status management (active/inactive)
+- [x] Talent status management (online/offline)
 - [x] Edit talent profile (talent-only access via /me)
 - [x] Talent data validation (basic client/server validation)
 - [ ] Talent registration (separate flow) — optional, not required currently
