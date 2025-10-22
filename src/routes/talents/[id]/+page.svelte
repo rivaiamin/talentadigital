@@ -104,6 +104,15 @@
 		</section>
 	{/if}
 
+	{#if t.pricing}
+		<section>
+			<h2 class="text-xl font-medium mb-2">Harga & Paket</h2>
+			<div class="bg-base-200 rounded-lg p-4">
+				<p class="text-base-content/80 whitespace-pre-line font-mono text-sm">{t.pricing}</p>
+			</div>
+		</section>
+	{/if}
+
 	{#if t.portfolioUrl}
 		<section>
 			<h2 class="text-xl font-medium mb-2">Portofolio</h2>

@@ -42,7 +42,8 @@ export const talent = sqliteTable('talent', {
 	facebookUrl: text('facebook_url'),
 	threadUrl: text('thread_url'),
 	xUrl: text('x_url'),
-	linkedinUrl: text('linkedin_url')
+	linkedinUrl: text('linkedin_url'),
+	pricing: text('pricing')
 });
 
 export const talentPortfolio = sqliteTable('talent_portfolio', {

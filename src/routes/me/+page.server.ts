@@ -40,6 +40,7 @@ export const actions: Actions = {
 		const portfolioUrl = formData.get('portfolioUrl');
 		const contactNumber = formData.get('contactNumber');
 		const description = formData.get('description');
+		const pricing = formData.get('pricing');
 		const picture = formData.get('picture');
 		// Social media URLs
 		const instagramUrl = formData.get('instagramUrl');
@@ -113,6 +114,9 @@ export const actions: Actions = {
 		if (typeof description === 'string') {
 			talentUpdates.description = description.trim() === '' ? '' : description.trim();
 		}
+		if (typeof pricing === 'string') {
+			talentUpdates.pricing = pricing.trim() === '' ? '' : pricing.trim();
+		}
 
 		// Handle social media URLs
 		const socialMediaFields = [
@@ -182,6 +186,7 @@ export const actions: Actions = {
 						location: talentUpdates.location ?? null,
 						contactNumber: talentUpdates.contactNumber ?? null,
 						description: talentUpdates.description ?? null,
+						pricing: talentUpdates.pricing ?? null,
 						portfolioUrl: talentUpdates.portfolioUrl ?? null,
 						instagramUrl: talentUpdates.instagramUrl ?? null,
 						facebookUrl: talentUpdates.facebookUrl ?? null,

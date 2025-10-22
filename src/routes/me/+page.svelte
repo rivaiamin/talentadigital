@@ -244,6 +244,19 @@
 				>
 			</div>
 			<div class="form-control w-full">
+				<label class="label" for="pricing"><span class="label-text">Harga & Paket</span></label>
+				<textarea
+					id="pricing"
+					name="pricing"
+					rows="6"
+					placeholder="Contoh:&#10;&#10;📦 Paket Basic - Rp 500.000&#10;• Logo design&#10;• 2 revisi&#10;• File PNG & JPG&#10;&#10;📦 Paket Premium - Rp 1.500.000&#10;• Logo design&#10;• Brand identity&#10;• 5 revisi&#10;• File AI, PNG, JPG&#10;• Style guide&#10;&#10;💬 Konsultasi gratis untuk proyek custom"
+					class="textarea textarea-bordered w-full mt-2">{data.talent?.pricing || ''}</textarea
+				>
+				<p class="text-xs text-base-content/70 mt-1">
+					Anda bisa menggunakan emoji, bullet points, dan format teks untuk membuat daftar harga yang menarik
+				</p>
+			</div>
+			<div class="form-control w-full">
 				<label class="label" for="picture"><span class="label-text">Foto</span></label>
 				{#if previewUrl}
 					<img
