@@ -279,7 +279,7 @@
 					class="file-input file-input-bordered w-full mt-2"
 					onchange={onFileChange}
 				/>
-				<p class="text-xs text-base-content/70 mt-1">PNG/JPG, maks 2MB</p>
+				<p class="text-xs text-base-content/70 mt-1">PNG/JPG/WebP, maks 5MB (akan dikompresi otomatis)</p>
 			</div>
 			<div class="pt-2">
 				<button class="btn btn-primary">Simpan</button>

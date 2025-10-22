@@ -60,6 +60,8 @@
 			alt={t.name}
 			class="w-32 h-32 object-cover rounded-full mx-auto"
 			fetchpriority="high"
+			loading="eager"
+			decoding="async"
 		/>
 		<h1 class="text-3xl font-semibold tracking-tight">{t.name}</h1>
 		<div class="flex items-center justify-center gap-4 text-sm">

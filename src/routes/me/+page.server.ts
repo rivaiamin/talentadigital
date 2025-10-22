@@ -5,6 +5,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
+import { optimizeImage, generateImageFilename, validateImageFile } from '$lib/server/image-utils';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
@@ -135,30 +136,45 @@ export const actions: Actions = {
 			}
 		}
 
-		// Handle image upload
+		// Handle image upload with compression
 		if (picture && picture instanceof File && picture.size > 0) {
 			const blob = picture as File;
-			const sizeLimit = 2 * 1024 * 1024; // 2MB
-			if (blob.size > sizeLimit) {
-				return fail(400, { message: 'Ukuran gambar melebihi 2MB' });
+			
+			// Validate image file
+			const validation = validateImageFile(blob);
+			if (!validation.valid) {
+				return fail(400, { message: validation.error });
 			}
-			const type = blob.type;
-			if (!/^image\/(png|jpeg|jpg|webp)$/i.test(type)) {
-				console.log('Rejected image type:', type);
-				return fail(400, {
-					message: `Format gambar tidak didukung. Format yang diterima: PNG, JPEG, JPG, WebP. Format yang dikirim: ${type}`
+
+			try {
+				// Convert to buffer
+				const arrayBuffer = await blob.arrayBuffer();
+				const buffer = Buffer.from(arrayBuffer);
+
+				// Optimize and compress the image
+				const optimized = await optimizeImage(buffer, {
+					maxWidth: 800,
+					maxHeight: 800,
+					quality: 85,
+					format: 'webp' // Use WebP for better compression
 				});
+
+				// Generate filename with timestamp for cache busting
+				const fileName = generateImageFilename(event.locals.user.id, optimized.format);
+				
+				// Save optimized image
+				const uploadsDir = `${process.cwd()}/static/uploads`;
+				await ensureDir(uploadsDir);
+				const filePath = `${uploadsDir}/${fileName}`;
+				await writeFile(filePath, optimized.buffer);
+				
+				talentUpdates.pictureUrl = `/uploads/${fileName}`;
+				
+				console.log(`Image optimized: ${blob.size} bytes -> ${optimized.size} bytes (${Math.round((1 - optimized.size / blob.size) * 100)}% reduction)`);
+			} catch (error) {
+				console.error('Image optimization failed:', error);
+				return fail(500, { message: 'Gagal memproses gambar. Silakan coba lagi.' });
 			}
-			const arrayBuffer = await blob.arrayBuffer();
-			const buffer = Buffer.from(arrayBuffer);
-			const ext = type === 'image/png' ? 'png' : type === 'image/webp' ? 'webp' : 'jpg';
-			// Use process.cwd() to ensure we're always writing to the correct static directory
-			const uploadsDir = `${process.cwd()}/static/uploads`;
-			await ensureDir(uploadsDir);
-			const fileName = `${event.locals.user.id}.${ext}`;
-			const filePath = `${uploadsDir}/${fileName}`;
-			await writeFile(filePath, buffer);
-			talentUpdates.pictureUrl = `/uploads/${fileName}`;
 		}
 
 		if (Object.keys(talentUpdates).length > 0) {
