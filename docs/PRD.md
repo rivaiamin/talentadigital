@@ -45,11 +45,18 @@ TalentaDigital (TD) is a platform simple P2P service platform, people can sell t
   - user_id: text → references user.id (1:1)
   - name: text
   - services: text (JSON string of string[])
-  - status: text ('online' | 'offline')
+  - status: text ('online' | 'offline' | 'hybrid')
   - location: text | null
   - contact_number: text | null
   - description: text | null
   - picture_url: text | null
+  - portfolio_url: text | null
+  - instagram_url: text | null
+  - facebook_url: text | null
+  - thread_url: text | null
+  - x_url: text | null
+  - linkedin_url: text | null
+  - pricing: text | null
 - talent_portfolios (`talent_portfolio`):
   - id: text
   - talent_id: text → references talent.id
@@ -63,8 +70,9 @@ TalentaDigital (TD) is a platform simple P2P service platform, people can sell t
 - Auth: Login/Register (`/auth/login`)
 - Change Password (`/auth/password`)
 - Profile (Me) (`/me`)
+- Talents Listing (`/talents`) - with search and filter
+- Talent Detail (`/talents/[id]`) - public talent profile
 - Demo (Lucia prototype) (`/demo/lucia`, `/demo/lucia/login`)
-- Future: Search & Filter, Public Talent Profile
 
 ## Features
 
@@ -75,14 +83,18 @@ TalentaDigital (TD) is a platform simple P2P service platform, people can sell t
 - [x] Logout
 - [x] Change Password
 - [x] Change Profile
-- [ ] Search & Filter Talent
-- [ ] Talent Profile (public)
-- [ ] Contact Talent (WhatsApp deep link)
+- [x] Search & Filter Talent
+- [x] Talent Profile (public)
+- [x] Contact Talent (WhatsApp deep link)
 - [ ] Donate to Platform (to support the platform)
 
 ### Talent Section
 
 - [x] Edit Talent Profile (only for the talent itself)
+- [x] Social Media Links (Instagram, Facebook, Thread, X, LinkedIn)
+- [x] Portfolio URL
+- [x] Pricing Information
+- [x] Hybrid Status (Online/Offline/Hybrid)
 - [ ] Add Talent Portfolio
 - [ ] Edit Talent Portfolio
 - [ ] Delete Talent Portfolio

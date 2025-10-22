@@ -47,9 +47,12 @@
 ### Features
 
 - [x] Talent profile creation with services, location, contact info (auto-created on user registration)
-- [x] Talent status management (online/offline)
+- [x] Talent status management (online/offline/hybrid)
 - [x] Edit talent profile (talent-only access via /me)
 - [x] Talent data validation (basic client/server validation)
+- [x] Social media links management (Instagram, Facebook, Thread, X, LinkedIn)
+- [x] Portfolio URL management
+- [x] Pricing information management
 - [ ] Talent registration (separate flow) — optional, not required currently
 
 ### Technical Tasks
@@ -58,6 +61,9 @@
 - [x] Implement talent update operations
 - [x] Build talent profile forms (/me)
 - [x] Add talent-specific authentication checks
+- [x] Add social media URL fields to database schema
+- [x] Add pricing field to database schema
+- [x] Update status enum to include 'hybrid'
 - [ ] Implement draft/save functionality
 
 ### NFR Alignment
@@ -69,7 +75,7 @@
 
 ## Epic 3: Public Discovery & Search (SSR/SEO-first)
 
-**Status:** 🔄 Not Started  
+**Status:** 🚧 In Progress  
 **Priority:** High  
 **Dependencies:** Epic 2  
 **Estimated Effort:** 5-7 days
@@ -81,6 +87,9 @@
 - [x] Filter talents by services, location, status
 - [x] Public talent profile viewing
 - [x] Responsive design implementation
+- [x] WhatsApp contact integration
+- [x] Social media links display
+- [x] Pricing information display
 
 ### Technical Tasks
 
@@ -88,6 +97,9 @@
 - [x] Build responsive talent listing components
 - [x] Implement public talent profile pages
 - [x] Design mobile-first UI components
+- [x] Add pagination for talent listings
+- [x] Implement status badges (Online/Offline/Hybrid)
+- [x] Add social media integration
 - [ ] Implement SSR for SEO
 - [ ] Add structured data (JSON-LD)
 - [ ] Configure meta/OG tags
@@ -133,21 +145,21 @@
 
 ## Epic 5: Contact & Communication
 
-**Status:** 🔄 Not Started  
+**Status:** 🚧 In Progress  
 **Priority:** Medium  
 **Dependencies:** Epic 3  
 **Estimated Effort:** 2-3 days
 
 ### Features
 
-- [ ] Contact talent functionality
-- [ ] WhatsApp integration for contact numbers
+- [x] Contact talent functionality
+- [x] WhatsApp integration for contact numbers
 - [ ] Contact form validation
 - [ ] Privacy controls for contact information
 
 ### Technical Tasks
 
-- [ ] Implement WhatsApp deep linking
+- [x] Implement WhatsApp deep linking
 - [ ] Create contact validation system
 - [ ] Add privacy settings for talents
 - [ ] Build contact success/error handling
@@ -213,16 +225,16 @@
 
 ## Progress Tracking
 
-### Overall Progress: 20% (some epics partially completed)
+### Overall Progress: 45% (significant progress on core features)
 
 | Epic   | Status         | Progress | Notes                                    |
 | ------ | -------------- | -------- | ---------------------------------------- |
-| Epic 1 | 🚧 In Progress | ~70%     | Custom auth implemented; Lucia demo only |
-| Epic 2 | 🚧 In Progress | ~50%     | Profile edit in /me                      |
-| Epic 3 | 🔄 Not Started | 0%       |                                          |
+| Epic 1 | 🚧 In Progress | ~80%     | Custom auth implemented; Lucia demo only |
+| Epic 2 | 🚧 In Progress | ~85%     | Profile edit with social media, pricing  |
+| Epic 3 | 🚧 In Progress | ~75%     | Talent listing, search, public profiles  |
 | Epic 4 | 🔄 Not Started | 0%       |                                          |
-| Epic 5 | 🔄 Not Started | 0%       |                                          |
-| Epic 6 | 🚧 In Progress | ~20%     | Theme toggle done                        |
+| Epic 5 | 🚧 In Progress | ~50%     | WhatsApp contact implemented             |
+| Epic 6 | 🚧 In Progress | ~30%     | Theme toggle and UI improvements         |
 
 ### Legend
 
@@ -236,7 +248,8 @@
 
 ## Next Steps
 
-1. Finish Epic 1: finalize auth (optionally migrate to Lucia or keep custom)
-2. Continue Epic 2: add portfolio CRUD and image upload polish
-3. Start Epic 3: public listing, search/filter, public profile
-4. Add SEO basics: meta tags, sitemap, robots, JSON-LD
+1. Complete Epic 3: Add SSR for SEO, meta tags, sitemap, robots.txt
+2. Continue Epic 2: Implement portfolio CRUD functionality
+3. Complete Epic 5: Add contact form validation and privacy controls
+4. Start Epic 4: Portfolio management system
+5. Enhance Epic 6: Performance optimization and security enhancements
