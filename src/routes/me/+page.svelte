@@ -178,13 +178,35 @@
 				/>
 			</div>
 			<div class="form-control w-full">
-				<label class="label" for="twitterUrl"><span class="label-text">Twitter/X</span></label>
+				<label class="label" for="facebookUrl"><span class="label-text">Facebook</span></label>
 				<input
-					id="twitterUrl"
-					name="twitterUrl"
-					value={data.talent?.twitterUrl || ''}
+					id="facebookUrl"
+					name="facebookUrl"
+					value={data.talent?.facebookUrl || ''}
 					type="url"
-					placeholder="https://twitter.com/username"
+					placeholder="https://facebook.com/username"
+					class="input input-bordered w-full mt-2"
+				/>
+			</div>
+			<div class="form-control w-full">
+				<label class="label" for="threadUrl"><span class="label-text">Thread</span></label>
+				<input
+					id="threadUrl"
+					name="threadUrl"
+					value={data.talent?.threadUrl || ''}
+					type="url"
+					placeholder="https://threads.net/@username"
+					class="input input-bordered w-full mt-2"
+				/>
+			</div>
+			<div class="form-control w-full">
+				<label class="label" for="xUrl"><span class="label-text">X</span></label>
+				<input
+					id="xUrl"
+					name="xUrl"
+					value={data.talent?.xUrl || ''}
+					type="url"
+					placeholder="https://x.com/username"
 					class="input input-bordered w-full mt-2"
 				/>
 			</div>
@@ -196,39 +218,6 @@
 					value={data.talent?.linkedinUrl || ''}
 					type="url"
 					placeholder="https://linkedin.com/in/username"
-					class="input input-bordered w-full mt-2"
-				/>
-			</div>
-			<div class="form-control w-full">
-				<label class="label" for="githubUrl"><span class="label-text">GitHub</span></label>
-				<input
-					id="githubUrl"
-					name="githubUrl"
-					value={data.talent?.githubUrl || ''}
-					type="url"
-					placeholder="https://github.com/username"
-					class="input input-bordered w-full mt-2"
-				/>
-			</div>
-			<div class="form-control w-full">
-				<label class="label" for="dribbbleUrl"><span class="label-text">Dribbble</span></label>
-				<input
-					id="dribbbleUrl"
-					name="dribbbleUrl"
-					value={data.talent?.dribbbleUrl || ''}
-					type="url"
-					placeholder="https://dribbble.com/username"
-					class="input input-bordered w-full mt-2"
-				/>
-			</div>
-			<div class="form-control w-full">
-				<label class="label" for="behanceUrl"><span class="label-text">Behance</span></label>
-				<input
-					id="behanceUrl"
-					name="behanceUrl"
-					value={data.talent?.behanceUrl || ''}
-					type="url"
-					placeholder="https://behance.net/username"
 					class="input input-bordered w-full mt-2"
 				/>
 			</div>

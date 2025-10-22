@@ -43,11 +43,10 @@ export const actions: Actions = {
 		const picture = formData.get('picture');
 		// Social media URLs
 		const instagramUrl = formData.get('instagramUrl');
-		const twitterUrl = formData.get('twitterUrl');
+		const facebookUrl = formData.get('facebookUrl');
+		const threadUrl = formData.get('threadUrl');
+		const xUrl = formData.get('xUrl');
 		const linkedinUrl = formData.get('linkedinUrl');
-		const githubUrl = formData.get('githubUrl');
-		const dribbbleUrl = formData.get('dribbbleUrl');
-		const behanceUrl = formData.get('behanceUrl');
 
 		const updates: Record<string, string> = {};
 
@@ -118,11 +117,10 @@ export const actions: Actions = {
 		// Handle social media URLs
 		const socialMediaFields = [
 			{ key: 'instagramUrl', value: instagramUrl },
-			{ key: 'twitterUrl', value: twitterUrl },
-			{ key: 'linkedinUrl', value: linkedinUrl },
-			{ key: 'githubUrl', value: githubUrl },
-			{ key: 'dribbbleUrl', value: dribbbleUrl },
-			{ key: 'behanceUrl', value: behanceUrl }
+			{ key: 'facebookUrl', value: facebookUrl },
+			{ key: 'threadUrl', value: threadUrl },
+			{ key: 'xUrl', value: xUrl },
+			{ key: 'linkedinUrl', value: linkedinUrl }
 		];
 
 		for (const field of socialMediaFields) {
@@ -186,11 +184,10 @@ export const actions: Actions = {
 						description: talentUpdates.description ?? null,
 						portfolioUrl: talentUpdates.portfolioUrl ?? null,
 						instagramUrl: talentUpdates.instagramUrl ?? null,
-						twitterUrl: talentUpdates.twitterUrl ?? null,
-						linkedinUrl: talentUpdates.linkedinUrl ?? null,
-						githubUrl: talentUpdates.githubUrl ?? null,
-						dribbbleUrl: talentUpdates.dribbbleUrl ?? null,
-						behanceUrl: talentUpdates.behanceUrl ?? null
+						facebookUrl: talentUpdates.facebookUrl ?? null,
+						threadUrl: talentUpdates.threadUrl ?? null,
+						xUrl: talentUpdates.xUrl ?? null,
+						linkedinUrl: talentUpdates.linkedinUrl ?? null
 					});
 				}
 			} catch (error) {

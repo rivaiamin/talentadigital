@@ -36,6 +36,13 @@
       "when": 1761051030965,
       "tag": "0004_past_surge",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1761052000000,
+      "tag": "0005_update_social_media",
+      "breakpoints": true
     }
   ]
 }
