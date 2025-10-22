@@ -90,7 +90,7 @@ export const actions: Actions = {
 				.filter((s) => s.length > 0);
 			talentUpdates.services = JSON.stringify(arr);
 		}
-		if (status === 'online' || status === 'offline') {
+		if (status === 'online' || status === 'offline' || status === 'hybrid') {
 			talentUpdates.status = status;
 		}
 		if (typeof location === 'string') {
