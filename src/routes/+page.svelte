@@ -7,8 +7,8 @@
         <div class="mx-auto mb-6 grid h-32 w-32 place-items-center rounded-full bg-red-600/10 ring-1 ring-red-500/20">
             <img src={logo} alt="Logo" class="h-16 w-16" />
         </div>
-        <h1 class="text-3xl font-semibold tracking-tight">Selamat datang</h1>
-        <p class="mt-2 text-sm text-base-content/70">Temukan dan hubungkan dengan para talent terbaik.</p>
+        <h1 class="text-3xl font-semibold tracking-tight">TALENTA DIGITAL</h1>
+        <p class="mt-2 text-sm text-base-content/70">nyari jasa apa saja? disini tempatnya!</p>
 
         <div class="mt-8 flex flex-col items-center gap-3">
             <a href="/talents" class="btn btn-primary btn-lg rounded-full w-48">Cari Talent</a>
