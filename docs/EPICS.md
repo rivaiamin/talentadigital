@@ -1,16 +1,18 @@
 # TalentaDigital - Epic Tracking
 
 ## Epic 1: Core Infrastructure & Authentication
+
 **Status:** 🚧 In Progress  
 **Priority:** High  
 **Dependencies:** None  
 **Estimated Effort:** 3-5 days
 
 ### Features
+
 - [x] User registration system (username uniqueness ensured, contact uniqueness)
 - [x] Registration uses full name input; username auto-generated (with numeric suffix fallback)
 - [x] Users can update username later from profile
-- [x] Login/logout functionality  
+- [x] Login/logout functionality
 - [x] Password change capability
 - [x] Profile management (basic user info)
 - [x] Database setup with Drizzle ORM
@@ -18,6 +20,7 @@
 - [ ] Lucia authentication integration (prototype exists under /demo/lucia; production uses custom auth)
 
 ### Technical Tasks
+
 - [x] Set up database schema for users
 - [x] Implement username generator (unique suffix, from provided username)
 - [x] Add username update flow on profile with uniqueness validation
@@ -27,6 +30,7 @@
 - [x] Add form validation and error handling
 
 ### NFR Alignment
+
 - **Low barrier entry:** Minimal required fields; allow browsing without login
 - **Security:** Secure authentication and session handling
 - **Mobile-first:** Responsive design for all auth forms
@@ -34,12 +38,14 @@
 ---
 
 ## Epic 2: Talent Management System
+
 **Status:** 🚧 In Progress  
 **Priority:** High  
 **Dependencies:** Epic 1  
 **Estimated Effort:** 4-6 days
 
 ### Features
+
 - [x] Talent profile creation with services, location, contact info (auto-created on user registration)
 - [x] Talent status management (online/offline)
 - [x] Edit talent profile (talent-only access via /me)
@@ -47,6 +53,7 @@
 - [ ] Talent registration (separate flow) — optional, not required currently
 
 ### Technical Tasks
+
 - [x] Create talent database schema
 - [x] Implement talent update operations
 - [x] Build talent profile forms (/me)
@@ -54,18 +61,21 @@
 - [ ] Implement draft/save functionality
 
 ### NFR Alignment
+
 - **Low barrier entry:** Simple, single-screen profile form; progressive enhancement
 - **Mobile-first:** Touch-friendly forms and validation
 
 ---
 
 ## Epic 3: Public Discovery & Search (SSR/SEO-first)
+
 **Status:** 🔄 Not Started  
 **Priority:** High  
 **Dependencies:** Epic 2  
 **Estimated Effort:** 5-7 days
 
 ### Features
+
 - [x] talent listings page
 - [x] Search functionality for talents
 - [x] Filter talents by services, location, status
@@ -73,6 +83,7 @@
 - [x] Responsive design implementation
 
 ### Technical Tasks
+
 - [x] Create search and filter algorithms
 - [x] Build responsive talent listing components
 - [x] Implement public talent profile pages
@@ -83,6 +94,7 @@
 - [ ] Generate sitemap and robots.txt
 
 ### NFR Alignment
+
 - **SEO Friendly with SSR:** Server-rendered pages, canonical URLs, structured data
 - **Performance:** Fast LCP on mobile; image lazy-loading; pagination
 - **Mobile-first:** Responsive design
@@ -90,12 +102,14 @@
 ---
 
 ## Epic 4: Portfolio Management
+
 **Status:** 🔄 Not Started  
 **Priority:** Medium  
 **Dependencies:** Epic 2  
 **Estimated Effort:** 3-4 days
 
 ### Features
+
 - [ ] Add talent portfolio items
 - [ ] Edit portfolio items (description, price, images)
 - [ ] Delete portfolio items
@@ -103,6 +117,7 @@
 - [ ] Price display and formatting
 
 ### Technical Tasks
+
 - [ ] Create portfolio database schema
 - [ ] Implement file upload system
 - [ ] Build portfolio CRUD interface
@@ -110,42 +125,49 @@
 - [ ] Implement drag-and-drop for images
 
 ### NFR Alignment
+
 - **Performance:** Image optimization and responsive sizes
 - **Low barrier entry:** Optional pricing/pictures; draft state
 
 ---
 
 ## Epic 5: Contact & Communication
+
 **Status:** 🔄 Not Started  
 **Priority:** Medium  
 **Dependencies:** Epic 3  
 **Estimated Effort:** 2-3 days
 
 ### Features
+
 - [ ] Contact talent functionality
 - [ ] WhatsApp integration for contact numbers
 - [ ] Contact form validation
 - [ ] Privacy controls for contact information
 
 ### Technical Tasks
+
 - [ ] Implement WhatsApp deep linking
 - [ ] Create contact validation system
 - [ ] Add privacy settings for talents
 - [ ] Build contact success/error handling
 
 ### NFR Alignment
+
 - **Low barrier entry:** Contact without account; single-tap WhatsApp redirect
 - **Security:** Avoid exposing contact where disabled
 
 ---
 
 ## Epic 6: Platform Support & Polish
+
 **Status:** 🚧 In Progress  
 **Priority:** Low  
 **Dependencies:** All previous epics  
 **Estimated Effort:** 4-5 days
 
 ### Features
+
 - [ ] Donation system for platform support
 - [x] Dark mode theme implementation (Theme toggle + persisted)
 - [ ] Performance optimization
@@ -154,6 +176,7 @@
 - [ ] SEO optimization
 
 ### Technical Tasks
+
 - [ ] Implement payment/donation integration
 - [ ] Add dark mode toggle and theming
 - [ ] Optimize loading times and performance
@@ -162,6 +185,7 @@
 - [ ] Add accessibility features
 
 ### NFR Alignment
+
 - **SEO/SSR:** Error pages (SSR), semantic HTML, accessible components
 - **Performance:** Caching, prefetching, route-level code-splitting
 - **Dark mode:** Theme implementation
@@ -171,14 +195,17 @@
 ## Development Phases
 
 ### Phase 1: MVP (Epics 1-3)
+
 **Target:** Core platform functionality
 **Timeline:** 12-18 days
 
 ### Phase 2: Enhanced (Epic 4)
+
 **Target:** Portfolio management
 **Timeline:** 3-4 days
 
 ### Phase 3: Complete (Epics 5-6)
+
 **Target:** Communication and polish
 **Timeline:** 6-8 days
 
@@ -188,18 +215,19 @@
 
 ### Overall Progress: 20% (some epics partially completed)
 
-| Epic | Status | Progress | Notes |
-|------|--------|----------|-------|
-| Epic 1 | 🚧 In Progress | ~70% | Custom auth implemented; Lucia demo only |
-| Epic 2 | 🚧 In Progress | ~50% | Profile edit in /me |
-| Epic 3 | 🔄 Not Started | 0% | |
-| Epic 4 | 🔄 Not Started | 0% | |
-| Epic 5 | 🔄 Not Started | 0% | |
-| Epic 6 | 🚧 In Progress | ~20% | Theme toggle done |
+| Epic   | Status         | Progress | Notes                                    |
+| ------ | -------------- | -------- | ---------------------------------------- |
+| Epic 1 | 🚧 In Progress | ~70%     | Custom auth implemented; Lucia demo only |
+| Epic 2 | 🚧 In Progress | ~50%     | Profile edit in /me                      |
+| Epic 3 | 🔄 Not Started | 0%       |                                          |
+| Epic 4 | 🔄 Not Started | 0%       |                                          |
+| Epic 5 | 🔄 Not Started | 0%       |                                          |
+| Epic 6 | 🚧 In Progress | ~20%     | Theme toggle done                        |
 
 ### Legend
+
 - 🔄 Not Started
-- 🚧 In Progress  
+- 🚧 In Progress
 - ✅ Completed
 - ⏸️ Blocked
 - ❌ Cancelled
@@ -207,6 +235,7 @@
 ---
 
 ## Next Steps
+
 1. Finish Epic 1: finalize auth (optionally migrate to Lucia or keep custom)
 2. Continue Epic 2: add portfolio CRUD and image upload polish
 3. Start Epic 3: public listing, search/filter, public profile

@@ -5,7 +5,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const { filename } = params;
-	
+
 	// Security check: prevent directory traversal
 	if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
 		throw error(400, 'Invalid filename');
@@ -15,11 +15,11 @@ export const GET: RequestHandler = async ({ params }) => {
 		// Read file from static/uploads directory
 		const filePath = join(process.cwd(), 'static', 'uploads', filename);
 		const fileBuffer = await readFile(filePath);
-		
+
 		// Determine content type based on file extension
 		const ext = filename.split('.').pop()?.toLowerCase();
 		let contentType = 'application/octet-stream';
-		
+
 		switch (ext) {
 			case 'jpg':
 			case 'jpeg':
@@ -36,8 +36,8 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response(Buffer.from(fileBuffer), {
 			headers: {
 				'Content-Type': contentType,
-				'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
-			},
+				'Cache-Control': 'public, max-age=31536000' // Cache for 1 year
+			}
 		});
 	} catch (err) {
 		console.error(err);

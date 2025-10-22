@@ -16,14 +16,14 @@ export function getSystemTheme(): Theme {
 export function applyTheme(theme: Theme) {
 	if (typeof document === 'undefined') return;
 	const root = document.documentElement;
-    if (theme === 'dark') root.classList.add('dark');
-    else root.classList.remove('dark');
-    // Keep DaisyUI in sync
-    root.setAttribute('data-theme', theme);
+	if (theme === 'dark') root.classList.add('dark');
+	else root.classList.remove('dark');
+	// Keep DaisyUI in sync
+	root.setAttribute('data-theme', theme);
 }
 
 export function initTheme() {
-    const theme = getStoredTheme() ?? 'dark';
+	const theme = getStoredTheme() ?? 'dark';
 	applyTheme(theme);
 }
 
@@ -33,10 +33,8 @@ export function toggleTheme() {
 	applyTheme(next);
 	try {
 		localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-        // Intentionally ignore storage write errors (e.g., privacy mode)
-        void 0;
-    }
+	} catch {
+		// Intentionally ignore storage write errors (e.g., privacy mode)
+		void 0;
+	}
 }
-
-

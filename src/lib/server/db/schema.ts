@@ -23,38 +23,38 @@ export type User = typeof user.$inferSelect;
 
 // Talent profile for each user (1:1)
 export const talent = sqliteTable('talent', {
-    id: text('id').primaryKey(),
-    userId: text('user_id')
-        .notNull()
-        .references(() => user.id),
-    name: text('name').notNull(),
-    // Stored as JSON string of string[]
-    services: text('services'),
-    // 'online' | 'offline'
-    status: text('status').notNull(),
-    location: text('location'),
-    contactNumber: text('contact_number'),
-    description: text('description'),
-    pictureUrl: text('picture_url'),
-    portfolioUrl: text('portfolio_url'),
-    // Social media URLs
-    instagramUrl: text('instagram_url'),
-    twitterUrl: text('twitter_url'),
-    linkedinUrl: text('linkedin_url'),
-    githubUrl: text('github_url'),
-    dribbbleUrl: text('dribbble_url'),
-    behanceUrl: text('behance_url')
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id),
+	name: text('name').notNull(),
+	// Stored as JSON string of string[]
+	services: text('services'),
+	// 'online' | 'offline' | 'hybrid'
+	status: text('status').notNull(),
+	location: text('location'),
+	contactNumber: text('contact_number'),
+	description: text('description'),
+	pictureUrl: text('picture_url'),
+	portfolioUrl: text('portfolio_url'),
+	// Social media URLs
+	instagramUrl: text('instagram_url'),
+	twitterUrl: text('twitter_url'),
+	linkedinUrl: text('linkedin_url'),
+	githubUrl: text('github_url'),
+	dribbbleUrl: text('dribbble_url'),
+	behanceUrl: text('behance_url')
 });
 
 export const talentPortfolio = sqliteTable('talent_portfolio', {
-    id: text('id').primaryKey(),
-    talentId: text('talent_id')
-        .notNull()
-        .references(() => talent.id),
-    description: text('description').notNull(),
-    // Decimal price stored in SQLite REAL
-    price: real('price'),
-    pictureUrl: text('picture_url')
+	id: text('id').primaryKey(),
+	talentId: text('talent_id')
+		.notNull()
+		.references(() => talent.id),
+	description: text('description').notNull(),
+	// Decimal price stored in SQLite REAL
+	price: real('price'),
+	pictureUrl: text('picture_url')
 });
 
 export type Talent = typeof talent.$inferSelect;

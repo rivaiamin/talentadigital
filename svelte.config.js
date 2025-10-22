@@ -13,7 +13,11 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		csrf: {
-			trustedOrigins: ['http://localhost:*', 'http://127.0.0.1:*', 'https://a6829cac4e5a.ngrok-free.app'] // Trust localhost origins for development
+			trustedOrigins: [
+				'http://localhost:*',
+				'http://127.0.0.1:*',
+				'https://893ccf65e247.ngrok-free.app'
+			] // Trust localhost origins for development
 		},
 		// Ensure static files are properly served in build/preview mode
 		files: {

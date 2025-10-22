@@ -1,24 +1,26 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 @plugin "daisyui" {
-    themes: dark --default, light;
-};
+	themes:
+		dark --default,
+		light;
+}
 
 /* DaisyUI primary color as dark red for both themes */
 /* DaisyUI v5 color tokens (see docs: --color-primary, --color-primary-content) */
-html[data-theme="light"] {
-    --color-primary: #8b0000;          /* dark red */
-    --color-primary-content: #ffffff;  /* white text on primary */
+html[data-theme='light'] {
+	--color-primary: #8b0000; /* dark red */
+	--color-primary-content: #ffffff; /* white text on primary */
 }
 
-html[data-theme="dark"] {
-    --color-primary: #8b0000;          /* dark red */
-    --color-primary-content: #ffffff;  /* white text on primary */
-    /* Base surfaces for dark purple theme */
-    --color-base-100: #1a1324;  /* main background */
-    --color-base-200: #231830;  /* raised surface */
-    --color-base-300: #2c1f3b;  /* higher elevation */
-    --color-base-content: #ffffff; /* default text */
+html[data-theme='dark'] {
+	--color-primary: #8b0000; /* dark red */
+	--color-primary-content: #ffffff; /* white text on primary */
+	/* Base surfaces for dark purple theme */
+	--color-base-100: #1a1324; /* main background */
+	--color-base-200: #231830; /* raised surface */
+	--color-base-300: #2c1f3b; /* higher elevation */
+	--color-base-content: #ffffff; /* default text */
 }
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
