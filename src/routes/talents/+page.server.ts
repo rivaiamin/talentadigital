@@ -80,6 +80,48 @@ export const load: PageServerLoad = async ({ url }) => {
 	const total = Number(count || 0);
 	const totalPages = Math.max(1, Math.ceil(total / filters.pageSize));
 
+	// Generate SEO data for talents listing
+	const baseUrl = url.origin;
+	const currentUrl = `${baseUrl}/talents`;
+	
+	// Create dynamic description based on filters
+	let description = 'Temukan talent digital terbaik di TalentaDigital.';
+	if (filters.q) {
+		description += ` Cari "${filters.q}" - `;
+	}
+	if (filters.service) {
+		description += ` Layanan: ${filters.service}.`;
+	}
+	if (filters.location) {
+		description += ` Lokasi: ${filters.location}.`;
+	}
+	description += ` ${total} talent tersedia.`;
+
+	const structuredData = {
+		"@context": "https://schema.org",
+		"@type": "ItemList",
+		"name": "Daftar Talent Digital",
+		"description": description,
+		"url": currentUrl,
+		"numberOfItems": total,
+		"itemListElement": talents.slice(0, 10).map((talent, index) => ({
+			"@type": "ListItem",
+			"position": index + 1,
+			"item": {
+				"@type": "Person",
+				"name": talent.name,
+				"description": talent.description?.slice(0, 100) || `Talent digital ${talent.name}`,
+				"url": `${baseUrl}/talents/${talent.id}`,
+				"image": talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : `${baseUrl}/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg`,
+				"address": talent.location ? {
+					"@type": "PostalAddress",
+					"addressLocality": talent.location
+				} : undefined,
+				"knowsAbout": talent.services
+			}
+		}))
+	};
+
 	return {
 		talents,
 		page: filters.page,
@@ -91,6 +133,14 @@ export const load: PageServerLoad = async ({ url }) => {
 			service: filters.service || '',
 			location: filters.location || '',
 			status: filters.status || 'online'
+		},
+		seo: {
+			title: filters.q 
+				? `Cari "${filters.q}" - Talenta Digital | TalentaDigital`
+				: 'Daftar Talent Digital | TalentaDigital',
+			description,
+			url: currentUrl,
+			structuredData
 		}
 	};
 };

@@ -11,6 +11,35 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{data.seo.title}</title>
+	<meta name="description" content={data.seo.description} />
+	<meta name="keywords" content="talent digital, freelancer, jasa digital, TalentaDigital, layanan digital, remote work" />
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={data.seo.url} />
+	<meta property="og:title" content={data.seo.title} />
+	<meta property="og:description" content={data.seo.description} />
+	<meta property="og:site_name" content="TalentaDigital" />
+	
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary" />
+	<meta property="twitter:url" content={data.seo.url} />
+	<meta property="twitter:title" content={data.seo.title} />
+	<meta property="twitter:description" content={data.seo.description} />
+	
+	<!-- Additional SEO -->
+	<meta name="robots" content="index, follow" />
+	<meta name="author" content="TalentaDigital" />
+	<link rel="canonical" href={data.seo.url} />
+	
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+		{JSON.stringify(data.seo.structuredData)}
+	</script>
+</svelte:head>
+
 <section class="grid gap-4">
 	<h1 class="text-3xl font-semibold tracking-tight">Cari Talenta</h1>
 
@@ -49,13 +78,14 @@
 		<div class="text-base-content/70">Tidak ada hasil.</div>
 	{:else}
 		<ul class="grid gap-3">
-			{#each data.talents as t}
+			{#each data.talents as t, index}
 				<li class="bg-base-200 rounded-xl p-3 flex gap-3 max-w-full" style="max-width:100%;">
 					<img
 						src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'}
 						alt={t.name}
 						class="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-						loading="lazy"
+						loading={index < 3 ? "eager" : "lazy"}
+						fetchpriority={index < 3 ? "high" : "auto"}
 						style="max-width:4rem;max-height:4rem;"
 					/>
 					<div class="flex-1 min-w-0 max-w-full" style="max-width:100%;">

@@ -1,3 +1,11 @@
 # allow crawling everything by default
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://talentadigital.com/sitemap.xml
+
+# Disallow private areas
+Disallow: /auth/
+Disallow: /me/
+Disallow: /uploads/

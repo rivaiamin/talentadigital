@@ -2,7 +2,43 @@
 	import type { PageData } from './$types';
 	let { data } = $props<{ data: PageData }>();
 	const t = data.talent;
+	const seo = data.seo;
 </script>
+
+<svelte:head>
+	<title>{seo.title}</title>
+	<meta name="description" content={seo.description} />
+	<meta name="keywords" content={`${t.name}, talent, digital, ${t.services?.join(', ') || ''}, ${t.location || ''}, TalentaDigital`} />
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="profile" />
+	<meta property="og:url" content={seo.url} />
+	<meta property="og:title" content={seo.title} />
+	<meta property="og:description" content={seo.description} />
+	<meta property="og:image" content={seo.image} />
+	<meta property="og:image:width" content="400" />
+	<meta property="og:image:height" content="400" />
+	<meta property="og:image:alt" content={`Foto profil ${t.name}`} />
+	<meta property="og:site_name" content="TalentaDigital" />
+	
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:url" content={seo.url} />
+	<meta property="twitter:title" content={seo.title} />
+	<meta property="twitter:description" content={seo.description} />
+	<meta property="twitter:image" content={seo.image} />
+	<meta property="twitter:image:alt" content={`Foto profil ${t.name}`} />
+	
+	<!-- Additional SEO -->
+	<meta name="robots" content="index, follow" />
+	<meta name="author" content="TalentaDigital" />
+	<link rel="canonical" href={seo.url} />
+	
+	<!-- Structured Data -->
+	<script type="application/ld+json">
+		{JSON.stringify(seo.structuredData)}
+	</script>
+</svelte:head>
 
 <article class="grid gap-4">
 	<a href="/talents" class="btn btn-sm btn-ghost w-fit -ml-2 inline-flex items-center gap-2">
@@ -23,6 +59,7 @@
 			src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'}
 			alt={t.name}
 			class="w-32 h-32 object-cover rounded-full mx-auto"
+			fetchpriority="high"
 		/>
 		<h1 class="text-3xl font-semibold tracking-tight">{t.name}</h1>
 		<div class="flex items-center justify-center gap-4 text-sm">
