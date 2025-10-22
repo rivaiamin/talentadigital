@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { getOptimalImageUrl, generateSrcSet } from '$lib/responsive-images';
+	import { getLogoUrl } from '$lib/logo';
 	let { data } = $props<{ data: PageData }>();
 	let q = $state(data.filters.q);
 	let service = $state(data.filters.service);
@@ -81,7 +83,9 @@
 			{#each data.talents as t, index}
 				<li class="bg-base-200 rounded-xl p-3 flex gap-3 max-w-full" style="max-width:100%;">
 					<img
-						src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'}
+						src={getOptimalImageUrl(t.pictureUrl || getLogoUrl(), 64, 64)}
+						srcset={generateSrcSet(t.pictureUrl || getLogoUrl())}
+						sizes="64px"
 						alt={t.name}
 						class="w-16 h-16 object-cover rounded-lg flex-shrink-0"
 						loading={index < 3 ? "eager" : "lazy"}

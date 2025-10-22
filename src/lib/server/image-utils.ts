@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { writeFile, ensureDir } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
 export interface ImageOptimizationOptions {
@@ -15,6 +15,18 @@ export interface OptimizedImageResult {
 	width: number;
 	height: number;
 	size: number;
+}
+
+export interface ResponsiveImageSet {
+	thumbnail: OptimizedImageResult;
+	medium: OptimizedImageResult;
+	full: OptimizedImageResult;
+}
+
+export interface ImageSize {
+	width: number;
+	height: number;
+	name: string;
 }
 
 /**
@@ -87,10 +99,40 @@ export async function saveOptimizedImage(
 	filename: string,
 	uploadsDir: string
 ): Promise<string> {
-	await ensureDir(uploadsDir);
+	await mkdir(uploadsDir, { recursive: true });
 	const filePath = join(uploadsDir, filename);
 	await writeFile(filePath, buffer);
 	return filePath;
+}
+
+/**
+ * Generate multiple responsive image sizes
+ */
+export async function generateResponsiveImages(
+	inputBuffer: Buffer,
+	baseFilename: string,
+	quality: number = 85
+): Promise<ResponsiveImageSet> {
+	const sizes = [
+		{ width: 128, height: 128, name: 'thumbnail' },
+		{ width: 400, height: 400, name: 'medium' },
+		{ width: 800, height: 800, name: 'full' }
+	];
+
+	const results: Partial<ResponsiveImageSet> = {};
+
+	for (const size of sizes) {
+		const optimized = await optimizeImage(inputBuffer, {
+			maxWidth: size.width,
+			maxHeight: size.height,
+			quality,
+			format: 'webp'
+		});
+		
+		results[size.name as keyof ResponsiveImageSet] = optimized;
+	}
+
+	return results as ResponsiveImageSet;
 }
 
 /**
@@ -103,6 +145,24 @@ export function generateImageFilename(
 ): string {
 	const ts = timestamp || Date.now();
 	return `${userId}_${ts}.${format}`;
+}
+
+/**
+ * Generate responsive filenames for different sizes
+ */
+export function generateResponsiveFilenames(
+	userId: string,
+	format: string,
+	timestamp?: number
+): { thumbnail: string; medium: string; full: string } {
+	const ts = timestamp || Date.now();
+	const base = `${userId}_${ts}`;
+	
+	return {
+		thumbnail: `${base}_thumb.${format}`,
+		medium: `${base}_medium.${format}`,
+		full: `${base}_full.${format}`
+	};
 }
 
 /**

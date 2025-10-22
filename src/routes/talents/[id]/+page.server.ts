@@ -3,6 +3,7 @@ import * as table from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
+import { getServerLogoUrl } from '$lib/logo';
 
 export const load: PageServerLoad = async ({ params, url }) => {
 	const id = params.id;
@@ -17,7 +18,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	// Generate SEO-friendly meta data
 	const baseUrl = url.origin;
 	const talentUrl = `${baseUrl}/talents/${id}`;
-	const imageUrl = talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : `${baseUrl}/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg`;
+	const imageUrl = talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : getServerLogoUrl(baseUrl);
 	
 	// Create description from available data
 	const services = talent.services ? safeParseJsonArray(talent.services) : [];

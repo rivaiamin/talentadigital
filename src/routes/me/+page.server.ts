@@ -5,7 +5,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
-import { optimizeImage, generateImageFilename, validateImageFile } from '$lib/server/image-utils';
+import { validateImageFile, generateResponsiveImages, generateResponsiveFilenames } from '$lib/server/image-utils';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
@@ -151,26 +151,30 @@ export const actions: Actions = {
 				const arrayBuffer = await blob.arrayBuffer();
 				const buffer = Buffer.from(arrayBuffer);
 
-				// Optimize and compress the image
-				const optimized = await optimizeImage(buffer, {
-					maxWidth: 800,
-					maxHeight: 800,
-					quality: 85,
-					format: 'webp' // Use WebP for better compression
-				});
-
-				// Generate filename with timestamp for cache busting
-				const fileName = generateImageFilename(event.locals.user.id, optimized.format);
+				// Generate multiple responsive image sizes
+				const timestamp = Date.now();
+				const responsiveImages = await generateResponsiveImages(buffer, event.locals.user.id, 85);
+				const filenames = generateResponsiveFilenames(event.locals.user.id, 'webp', timestamp);
 				
-				// Save optimized image
+				// Save all image sizes
 				const uploadsDir = `${process.cwd()}/static/uploads`;
-				await ensureDir(uploadsDir);
-				const filePath = `${uploadsDir}/${fileName}`;
-				await writeFile(filePath, optimized.buffer);
+				await mkdir(uploadsDir, { recursive: true });
 				
-				talentUpdates.pictureUrl = `/uploads/${fileName}`;
+				// Save thumbnail (128x128)
+				await writeFile(`${uploadsDir}/${filenames.thumbnail}`, responsiveImages.thumbnail.buffer);
 				
-				console.log(`Image optimized: ${blob.size} bytes -> ${optimized.size} bytes (${Math.round((1 - optimized.size / blob.size) * 100)}% reduction)`);
+				// Save medium (400x400)
+				await writeFile(`${uploadsDir}/${filenames.medium}`, responsiveImages.medium.buffer);
+				
+				// Save full (800x800)
+				await writeFile(`${uploadsDir}/${filenames.full}`, responsiveImages.full.buffer);
+				
+				// Store the full size URL in the database, but we'll use responsive images in the frontend
+				talentUpdates.pictureUrl = `/uploads/${filenames.full}`;
+				
+				// Store all sizes for responsive loading (we'll add this to the database schema later)
+				// For now, we'll use the full size URL
+				console.log(`Responsive images generated: ${blob.size} bytes -> ${responsiveImages.thumbnail.size + responsiveImages.medium.size + responsiveImages.full.size} bytes total`);
 			} catch (error) {
 				console.error('Image optimization failed:', error);
 				return fail(500, { message: 'Gagal memproses gambar. Silakan coba lagi.' });
@@ -220,9 +224,6 @@ export const actions: Actions = {
 		return redirect(303, '/me?updated=1');
 	}
 };
-async function ensureDir(dir: string) {
-	await mkdir(dir, { recursive: true });
-}
 
 function validateUsername(username: unknown): username is string {
 	return (

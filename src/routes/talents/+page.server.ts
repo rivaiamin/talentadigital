@@ -2,6 +2,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 import { and, eq, like, or, sql } from 'drizzle-orm';
+import { getServerLogoUrl } from '$lib/logo';
 
 type Filters = {
 	q: string | null;
@@ -112,7 +113,7 @@ export const load: PageServerLoad = async ({ url }) => {
 				"name": talent.name,
 				"description": talent.description?.slice(0, 100) || `Talent digital ${talent.name}`,
 				"url": `${baseUrl}/talents/${talent.id}`,
-				"image": talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : `${baseUrl}/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg`,
+				"image": talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : getServerLogoUrl(baseUrl),
 				"address": talent.location ? {
 					"@type": "PostalAddress",
 					"addressLocality": talent.location

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { getOptimalImageUrl, generateSrcSet } from '$lib/responsive-images';
 	let { data, form } = $props();
 	let previewUrl = $state<string | null>(null);
 
@@ -266,7 +267,9 @@
 					/>
 				{:else if data.talent?.pictureUrl}
 					<img
-						src={data.talent.pictureUrl}
+						src={getOptimalImageUrl(data.talent.pictureUrl, 96, 96)}
+						srcset={generateSrcSet(data.talent.pictureUrl)}
+						sizes="96px"
 						alt="Foto talenta"
 						class="w-24 h-24 rounded-full object-cover mt-2"
 					/>

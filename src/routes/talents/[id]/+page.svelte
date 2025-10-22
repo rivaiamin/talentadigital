@@ -1,8 +1,14 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { getOptimalImageUrl, generateSrcSet } from '$lib/responsive-images';
+	import { getLogoUrl } from '$lib/logo';
 	let { data } = $props<{ data: PageData }>();
 	const t = data.talent;
 	const seo = data.seo;
+	
+	// Generate responsive image URLs
+	const profileImageUrl = getOptimalImageUrl(t.pictureUrl || getLogoUrl(), 128, 128);
+	const profileImageSrcSet = generateSrcSet(t.pictureUrl || getLogoUrl());
 </script>
 
 <svelte:head>
@@ -56,7 +62,9 @@
 	</a>
 	<header class="grid gap-2 text-center">
 		<img
-			src={t.pictureUrl || '/uploads/wg44pddcfwt2hgpjwsqkyvqf.jpg'}
+			src={profileImageUrl}
+			srcset={profileImageSrcSet}
+			sizes="128px"
 			alt={t.name}
 			class="w-32 h-32 object-cover rounded-full mx-auto"
 			fetchpriority="high"
