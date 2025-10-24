@@ -1,1 +1,0 @@
-ALTER TABLE `talent` ADD `portfolio_url` text;
