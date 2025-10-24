@@ -96,7 +96,7 @@
 						<div class="flex items-center gap-2 mb-1">
 							<a
 								class="font-semibold hover:underline block max-w-full truncate"
-								href={`/talents/${t.id}`}>{t.name}</a
+								href={`/talents/${t.username}`}>{t.name}</a
 							>
 							{#if t.status === 'online'}
 								<div class="tooltip tooltip-bottom" data-tip="Layanan digital/remote">
@@ -129,7 +129,11 @@
 								</div>
 							{/if}
 						</div>
-						<div class="text-sm text-base-content/70 break-words max-w-full">{t.description}</div>
+						<div class="text-sm text-base-content/70 break-words max-w-full">
+							{t.description && t.description.length > 120
+								? t.description.slice(0, 80) + '…'
+								: t.description}
+						</div>
 						{#if t.services?.length}
 							<div class="mt-2 flex flex-wrap gap-2 max-w-full" style="overflow-x:auto;">
 								{#each t.services as s}

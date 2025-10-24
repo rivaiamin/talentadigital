@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	</url>
 	${talents.map(talent => `
 	<url>
-		<loc>${baseUrl}/talents/${talent.id}</loc>
+		<loc>${baseUrl}/talents/${talent.username}</loc>
 		<lastmod>${new Date().toISOString()}</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.8</priority>

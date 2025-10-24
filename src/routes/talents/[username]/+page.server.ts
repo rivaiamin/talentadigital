@@ -6,8 +6,8 @@ import { error } from '@sveltejs/kit';
 import { getServerLogoUrl } from '$lib/logo';
 
 export const load: PageServerLoad = async ({ params, url }) => {
-	const id = params.id;
-	const [talent] = await db.select().from(table.talent).where(eq(table.talent.id, id));
+	const username = params.username;
+	const [talent] = await db.select().from(table.talent).where(eq(table.talent.username, username));
 	if (!talent) throw error(404, 'Talent tidak ditemukan');
 	
 	const result = {
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
 	// Generate SEO-friendly meta data
 	const baseUrl = url.origin;
-	const talentUrl = `${baseUrl}/talents/${id}`;
+	const talentUrl = `${baseUrl}/talents/${username}`;
 	const imageUrl = talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : getServerLogoUrl(baseUrl);
 	
 	// Create description from available data

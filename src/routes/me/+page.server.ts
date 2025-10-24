@@ -193,13 +193,16 @@ export const actions: Actions = {
 						.set({
 							...talentUpdates,
 							// keep talent.name in sync with user.fullName if provided
-							...(updates.fullName ? { name: updates.fullName } : {})
+							...(updates.fullName ? { name: updates.fullName } : {}),
+							// keep talent.username in sync with user.username if provided
+							...(updates.username ? { username: updates.username } : {})
 						})
 						.where(eq(table.talent.id, existing.id));
 				} else {
 					await db.insert(table.talent).values({
 						id: event.locals.user.id,
 						userId: event.locals.user.id,
+						username: updates.username || event.locals.user.username,
 						name: updates.fullName || event.locals.user.fullName || event.locals.user.username,
 						services: talentUpdates.services ?? JSON.stringify([]),
 						status: talentUpdates.status || 'online',

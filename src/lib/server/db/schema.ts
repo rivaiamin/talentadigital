@@ -27,6 +27,7 @@ export const talent = sqliteTable('talent', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id),
+	username: text('username').notNull().unique(),
 	name: text('name').notNull(),
 	// Stored as JSON string of string[]
 	services: text('services'),

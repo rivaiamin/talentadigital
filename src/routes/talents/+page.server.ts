@@ -112,7 +112,7 @@ export const load: PageServerLoad = async ({ url }) => {
 				"@type": "Person",
 				"name": talent.name,
 				"description": talent.description?.slice(0, 100) || `Talent digital ${talent.name}`,
-				"url": `${baseUrl}/talents/${talent.id}`,
+				"url": `${baseUrl}/talents/${talent.username}`,
 				"image": talent.pictureUrl ? `${baseUrl}${talent.pictureUrl}` : getServerLogoUrl(baseUrl),
 				"address": talent.location ? {
 					"@type": "PostalAddress",
