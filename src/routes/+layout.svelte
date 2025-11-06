@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/logo.svg';
 	import { initTheme } from '$lib/theme';
 	import ThemeToggle from '$lib/ThemeToggle.svelte';
+	import NavigationLoader from '$lib/NavigationLoader.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	let { children } = $props();
@@ -39,6 +40,7 @@
 	</script>
 </svelte:head>
 
+<NavigationLoader />
 <div class="min-h-dvh bg-base-100 text-base-content">
 	{#if $page.url.pathname !== '/'}
 		<header class="sticky top-0 z-10 border-base-300 bg-base-100/80 backdrop-blur">
