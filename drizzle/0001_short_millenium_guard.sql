@@ -1,0 +1,1 @@
+ALTER TABLE "talent" ADD COLUMN "picture_urls" json;

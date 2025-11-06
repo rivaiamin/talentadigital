@@ -5,7 +5,8 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
-import { validateImageFile, generateResponsiveImages, generateResponsiveFilenames } from '$lib/server/image-utils';
+import { validateImageFile, generateResponsiveImages } from '$lib/server/image-utils';
+import { uploadResponsiveImagesToSupabase, generateSupabasePath, isSupabaseConfigured } from '$lib/server/supabase-storage';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
@@ -83,13 +84,13 @@ export const actions: Actions = {
 		}
 
 		// Build talent updates
-		const talentUpdates: Record<string, string> = {};
+		const talentUpdates: Record<string, string | string[] | { thumbnail: string; medium: string; full: string }> = {};
 		if (typeof servicesRaw === 'string') {
 			const arr = servicesRaw
 				.split(',')
 				.map((s) => s.trim())
 				.filter((s) => s.length > 0);
-			talentUpdates.services = JSON.stringify(arr);
+			talentUpdates.services = arr;
 		}
 		if (status === 'online' || status === 'offline' || status === 'hybrid') {
 			talentUpdates.status = status;
@@ -154,29 +155,52 @@ export const actions: Actions = {
 				// Generate multiple responsive image sizes
 				const timestamp = Date.now();
 				const responsiveImages = await generateResponsiveImages(buffer, event.locals.user.id, 85);
-				const filenames = generateResponsiveFilenames(event.locals.user.id, 'webp', timestamp);
 				
-				// Save all image sizes
-				const uploadsDir = `${process.cwd()}/static/uploads`;
-				await mkdir(uploadsDir, { recursive: true });
-				
-				// Save thumbnail (128x128)
-				await writeFile(`${uploadsDir}/${filenames.thumbnail}`, responsiveImages.thumbnail.buffer);
-				
-				// Save medium (400x400)
-				await writeFile(`${uploadsDir}/${filenames.medium}`, responsiveImages.medium.buffer);
-				
-				// Save full (800x800)
-				await writeFile(`${uploadsDir}/${filenames.full}`, responsiveImages.full.buffer);
-				
-				// Store the full size URL in the database, but we'll use responsive images in the frontend
-				talentUpdates.pictureUrl = `/uploads/${filenames.full}`;
-				
-				// Store all sizes for responsive loading (we'll add this to the database schema later)
-				// For now, we'll use the full size URL
-				console.log(`Responsive images generated: ${blob.size} bytes -> ${responsiveImages.thumbnail.size + responsiveImages.medium.size + responsiveImages.full.size} bytes total`);
+				// Check if Supabase is configured, otherwise fallback to local storage
+				if (isSupabaseConfigured()) {
+					// Upload to Supabase Storage
+					const basePath = generateSupabasePath(event.locals.user.id, timestamp);
+					const imageUrls = await uploadResponsiveImagesToSupabase({
+						thumbnail: responsiveImages.thumbnail.buffer,
+						medium: responsiveImages.medium.buffer,
+						full: responsiveImages.full.buffer
+					}, basePath);
+					
+					// Store both single URL (for backward compatibility) and responsive URLs
+					talentUpdates.pictureUrl = imageUrls.full;
+					talentUpdates.pictureUrls = imageUrls;
+					
+					console.log(`Images uploaded to Supabase: ${blob.size} bytes -> ${responsiveImages.thumbnail.size + responsiveImages.medium.size + responsiveImages.full.size} bytes total`);
+				} else {
+					// Fallback to local storage
+					const uploadsDir = `${process.cwd()}/static/uploads`;
+					await mkdir(uploadsDir, { recursive: true });
+					
+					// Generate filenames for local storage
+					const baseFilename = `${event.locals.user.id}_${timestamp}`;
+					const filenames = {
+						thumbnail: `${baseFilename}_thumb.webp`,
+						medium: `${baseFilename}_medium.webp`,
+						full: `${baseFilename}_full.webp`
+					};
+					
+					// Save all image sizes locally
+					await writeFile(`${uploadsDir}/${filenames.thumbnail}`, responsiveImages.thumbnail.buffer);
+					await writeFile(`${uploadsDir}/${filenames.medium}`, responsiveImages.medium.buffer);
+					await writeFile(`${uploadsDir}/${filenames.full}`, responsiveImages.full.buffer);
+					
+					// Store URLs for local storage
+					talentUpdates.pictureUrl = `/uploads/${filenames.full}`;
+					talentUpdates.pictureUrls = {
+						thumbnail: `/uploads/${filenames.thumbnail}`,
+						medium: `/uploads/${filenames.medium}`,
+						full: `/uploads/${filenames.full}`
+					};
+					
+					console.log(`Images saved locally: ${blob.size} bytes -> ${responsiveImages.thumbnail.size + responsiveImages.medium.size + responsiveImages.full.size} bytes total`);
+				}
 			} catch (error) {
-				console.error('Image optimization failed:', error);
+				console.error('Image processing failed:', error);
 				return fail(500, { message: 'Gagal memproses gambar. Silakan coba lagi.' });
 			}
 		}
@@ -204,18 +228,20 @@ export const actions: Actions = {
 						userId: event.locals.user.id,
 						username: updates.username || event.locals.user.username,
 						name: updates.fullName || event.locals.user.fullName || event.locals.user.username,
-						services: talentUpdates.services ?? JSON.stringify([]),
-						status: talentUpdates.status || 'online',
-						location: talentUpdates.location ?? null,
-						contactNumber: talentUpdates.contactNumber ?? null,
-						description: talentUpdates.description ?? null,
-						pricing: talentUpdates.pricing ?? null,
-						portfolioUrl: talentUpdates.portfolioUrl ?? null,
-						instagramUrl: talentUpdates.instagramUrl ?? null,
-						facebookUrl: talentUpdates.facebookUrl ?? null,
-						threadUrl: talentUpdates.threadUrl ?? null,
-						xUrl: talentUpdates.xUrl ?? null,
-						linkedinUrl: talentUpdates.linkedinUrl ?? null
+						services: (talentUpdates.services as string[]) ?? [],
+						status: (talentUpdates.status as 'online' | 'offline' | 'hybrid') || 'online',
+						location: (talentUpdates.location as string) ?? null,
+						contactNumber: (talentUpdates.contactNumber as string) ?? null,
+						description: (talentUpdates.description as string) ?? null,
+						pricing: (talentUpdates.pricing as string) ?? null,
+						pictureUrl: (talentUpdates.pictureUrl as string) ?? null,
+						pictureUrls: (talentUpdates.pictureUrls as { thumbnail: string; medium: string; full: string }) ?? null,
+						portfolioUrl: (talentUpdates.portfolioUrl as string) ?? null,
+						instagramUrl: (talentUpdates.instagramUrl as string) ?? null,
+						facebookUrl: (talentUpdates.facebookUrl as string) ?? null,
+						threadUrl: (talentUpdates.threadUrl as string) ?? null,
+						xUrl: (talentUpdates.xUrl as string) ?? null,
+						linkedinUrl: (talentUpdates.linkedinUrl as string) ?? null
 					});
 				}
 			} catch (error) {

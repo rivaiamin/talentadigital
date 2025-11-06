@@ -112,6 +112,7 @@ export const actions: Actions = {
 				.from(table.user)
 				.where(eq(table.user.contactNumber, contactNumber));
 			if (existingContact.length > 0) {
+				console.error('Contact number already exists:', contactNumber);
 				return fail(400, { message: 'Nomor kontak sudah terdaftar', action: 'register' });
 			}
 
@@ -140,8 +141,9 @@ export const actions: Actions = {
 			await db.insert(table.talent).values({
 				id: userId, // use same id for 1:1 mapping convenience
 				userId: userId,
+				username: finalUsername,
 				name: fullName,
-				services: JSON.stringify([]),
+				services: [],
 				status: 'online',
 				location: null,
 				contactNumber: contactNumber,

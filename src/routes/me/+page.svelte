@@ -128,7 +128,7 @@
 				<input
 					id="services"
 					name="services"
-					value={(data.talent?.services ? JSON.parse(data.talent.services) : []).join(', ')}
+					value={(Array.isArray(data.talent?.services) ? data.talent.services : []).join(', ')}
 					class="input input-bordered w-full mt-2"
 				/>
 			</div>

@@ -40,16 +40,16 @@ export const load: PageServerLoad = async ({ url }) => {
 			or(
 				like(table.talent.name, pattern),
 				like(table.talent.description, pattern),
-				like(table.talent.services, pattern),
+				sql`${table.talent.services}::text LIKE ${pattern}`,
 				like(table.talent.location, pattern)
 			)
 		);
 	}
 
 	if (filters.service && filters.service.trim() !== '') {
-		// services stored as JSON string, use LIKE for simple contains
+		// services stored as JSON array, cast to text for LIKE search
 		const servicePattern = `%${filters.service.trim()}%`;
-		conditions.push(like(table.talent.services, servicePattern));
+		conditions.push(sql`${table.talent.services}::text LIKE ${servicePattern}`);
 	}
 
 	if (filters.location && filters.location.trim() !== '') {

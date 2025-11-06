@@ -37,6 +37,12 @@ export const talent = pgTable('talent', {
 	contactNumber: text('contact_number'),
 	description: text('description'),
 	pictureUrl: text('picture_url'),
+	// Responsive image URLs stored as JSON
+	pictureUrls: json('picture_urls').$type<{
+		thumbnail: string;
+		medium: string;
+		full: string;
+	}>(),
 	portfolioUrl: text('portfolio_url'),
 	// Social media URLs
 	instagramUrl: text('instagram_url'),
