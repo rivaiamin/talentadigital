@@ -28,35 +28,14 @@
 </script>
 
 {#if showLoader}
-	<div
-		class="fixed top-0 left-0 right-0 z-50 h-0.5 bg-base-200/50 overflow-hidden"
-		role="progressbar"
-		aria-label="Loading page"
-		aria-busy="true"
-	>
-		<div class="h-full bg-primary loading-bar shadow-lg shadow-primary/50"></div>
+	<div class="fixed left-1/2 top-4 z-50 -translate-x-1/2 pointer-events-none">
+		<div
+			class="flex items-center gap-3 rounded-full border border-base-content/20 bg-base-100/80 px-4 py-2 shadow-lg backdrop-blur-md pointer-events-auto"
+			role="status"
+			aria-live="polite"
+		>
+			<span class="loading loading-spinner text-primary" aria-hidden="true"></span>
+			<span class="text-sm font-medium text-base-content">Memuat...</span>
+		</div>
 	</div>
 {/if}
-
-<style>
-	.loading-bar {
-		animation: loading-progress 1.5s ease-in-out infinite;
-		width: 30%;
-		transform-origin: left;
-	}
-
-	@keyframes loading-progress {
-		0% {
-			transform: translateX(-100%);
-			opacity: 0.6;
-		}
-		50% {
-			transform: translateX(200%);
-			opacity: 1;
-		}
-		100% {
-			transform: translateX(500%);
-			opacity: 0.6;
-		}
-	}
-</style>
