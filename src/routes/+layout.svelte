@@ -41,7 +41,7 @@
 </svelte:head>
 
 <NavigationLoader />
-<div class="min-h-dvh bg-base-100 text-base-content">
+<div class="min-h-dvh bg-base-100 text-base-content flex flex-col">
 	{#if $page.url.pathname !== '/'}
 		<header class="sticky top-0 z-10 border-base-300 bg-base-100/80 backdrop-blur">
 			<div class="mx-auto max-w-screen-sm px-4 py-3 flex items-center justify-between">
@@ -77,18 +77,22 @@
 			</div>
 		</header>
 	{/if}
-	<main class="mx-auto max-w-screen-sm px-4 pt-6">
+	<main class="mx-auto max-w-screen-sm px-4 pt-6 flex-1 w-full">
 		{@render children?.()}
 	</main>
 	<footer
-		class="inset-x-0 bottom-0 mx-auto max-w-screen-sm px-4 py-6 text-xs text-base-content/60 text-center z-20"
+		class="inset-x-0 bottom-0 mx-auto max-w-screen-sm px-4 py-6 text-xs text-base-content/60 text-center z-20 mt-auto"
 	>
-		<div>
+		<div class="flex flex-col items-center gap-2 justify-center">
+			<div class="text-xs text-base-content/70 text-center">
+				Support untuk pengembangan komunitas <br>
+			</div>
 			<a
 				href="/donasi"
-				class="text-lg text-base-content/80 underline decoration-primary/60 underline-offset-4"
-				>Donasi</a
+				class="btn btn-sm btn-primary font-semibold shadow-sm px-4 py-1 rounded-full transition hover:scale-105"
 			>
+				Donasi
+			</a>
 		</div>
 
 		<!-- Decorative elements similar to reference image -->
@@ -107,7 +111,7 @@
 			</div>
 		</div>
 
-		<div class="mt-12">
+		<div class="mt-6">
 			&copy; {new Date().getFullYear()} TalentaDigital
 		</div>
 	</footer>
