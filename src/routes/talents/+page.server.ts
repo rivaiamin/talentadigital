@@ -2,6 +2,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 import { and, eq, like, or, sql } from 'drizzle-orm';
+import type { SQL } from 'drizzle-orm';
 import { getServerLogoUrl } from '$lib/logo';
 
 type Filters = {
@@ -13,6 +14,9 @@ type Filters = {
 	pageSize: number;
 };
 
+type TalentRow = typeof table.talent.$inferSelect;
+type TalentWithServices = Omit<TalentRow, 'services'> & { services: string[] };
+
 export const load: PageServerLoad = async ({ url }) => {
 	const filters: Filters = {
 		q: url.searchParams.get('q'),
@@ -23,27 +27,26 @@ export const load: PageServerLoad = async ({ url }) => {
 		pageSize: Math.min(50, Math.max(1, Number(url.searchParams.get('pageSize') || '10')))
 	};
 
-	const conditions = [] as Array<
-		ReturnType<typeof and> | ReturnType<typeof or> | ReturnType<typeof eq> | ReturnType<typeof like>
-	>;
+	const conditions: SQL[] = [];
 
-	// Default to show online and hybrid talents unless status provided
+	// Default to show only online talents to match UI default
 	if (filters.status) {
 		conditions.push(eq(table.talent.status, filters.status));
 	} else {
-		conditions.push(or(eq(table.talent.status, 'online'), eq(table.talent.status, 'hybrid')));
+		conditions.push(eq(table.talent.status, 'online'));
 	}
 
 	if (filters.q && filters.q.trim() !== '') {
 		const pattern = `%${filters.q.trim()}%`;
-		conditions.push(
-			or(
-				like(table.talent.name, pattern),
-				like(table.talent.description, pattern),
-				sql`${table.talent.services}::text LIKE ${pattern}`,
-				like(table.talent.location, pattern)
-			)
+		const searchClause = or(
+			like(table.talent.name, pattern),
+			like(table.talent.description, pattern),
+			sql`${table.talent.services}::text LIKE ${pattern}`,
+			like(table.talent.location, pattern)
 		);
+		if (searchClause) {
+			conditions.push(searchClause);
+		}
 	}
 
 	if (filters.service && filters.service.trim() !== '') {
@@ -57,25 +60,44 @@ export const load: PageServerLoad = async ({ url }) => {
 		conditions.push(like(table.talent.location, locPattern));
 	}
 
-	const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+	const whereClause = conditions.length > 0 ? (and(...conditions) as SQL) : undefined;
 
 	const offset = (filters.page - 1) * filters.pageSize;
 
-	const [{ count }] = await db
-		.select({ count: sql<number>`count(*)` })
-		.from(table.talent)
-		.where(whereClause as any);
+	let countResult: Array<{ count: number }>;
+	if (whereClause) {
+		countResult = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(table.talent)
+			.where(whereClause);
+	} else {
+		countResult = await db.select({ count: sql<number>`count(*)` }).from(table.talent);
+	}
+	const [{ count }] = countResult;
 
-	const rows = await db
-		.select()
-		.from(table.talent)
-		.where(whereClause as any)
-		.limit(filters.pageSize)
-		.offset(offset);
+	let rows: TalentRow[];
+	if (whereClause) {
+		rows = await db
+			.select()
+			.from(table.talent)
+			.where(whereClause)
+			.limit(filters.pageSize)
+			.offset(offset);
+	} else {
+		rows = await db
+			.select()
+			.from(table.talent)
+			.limit(filters.pageSize)
+			.offset(offset);
+	}
 
-	const talents = rows.map((t) => ({
+	const talents: TalentWithServices[] = rows.map((t) => ({
 		...t,
-		services: t.services ? (safeParseJsonArray(t.services) as string[]) : []
+		services: Array.isArray(t.services)
+			? (t.services as string[])
+			: t.services
+			? safeParseJsonArray(t.services)
+			: []
 	}));
 
 	const total = Number(count || 0);
@@ -118,7 +140,7 @@ export const load: PageServerLoad = async ({ url }) => {
 					"@type": "PostalAddress",
 					"addressLocality": talent.location
 				} : undefined,
-				"knowsAbout": talent.services
+				"knowsAbout": talent.services.length > 0 ? talent.services : undefined
 			}
 		}))
 	};
@@ -146,7 +168,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	};
 };
 
-function safeParseJsonArray(value: string) {
+function safeParseJsonArray(value: string): string[] {
 	try {
 		const parsed = JSON.parse(value);
 		return Array.isArray(parsed) ? parsed : [];
