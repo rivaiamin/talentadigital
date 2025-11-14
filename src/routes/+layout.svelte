@@ -41,6 +41,7 @@
 </svelte:head>
 
 <NavigationLoader />
+<a href="#main-content" class="skip-link">Lewati ke konten</a>
 <div class="min-h-dvh bg-base-100 text-base-content flex flex-col">
 	{#if $page.url.pathname !== '/'}
 		<header class="sticky top-0 z-10 border-base-300 bg-base-100/80 backdrop-blur">
@@ -77,8 +78,10 @@
 			</div>
 		</header>
 	{/if}
-	<main class="mx-auto max-w-screen-sm px-4 pt-6 flex-1 w-full">
-		{@render children?.()}
+	<main id="main-content" class="mx-auto max-w-screen-sm px-4 pt-6 flex-1 w-full">
+		{#if children}
+			{children?.()}
+		{/if}
 	</main>
 	<footer
 		class="inset-x-0 bottom-0 mx-auto max-w-screen-sm px-4 py-6 text-xs text-base-content/60 text-center z-20 mt-auto"
