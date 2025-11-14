@@ -6,7 +6,6 @@
 	import NavigationLoader from '$lib/NavigationLoader.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	let { children } = $props();
 
 	onMount(() => {
 		// Only initialize theme if it wasn't already set by the inline script
@@ -79,9 +78,7 @@
 		</header>
 	{/if}
 	<main id="main-content" class="mx-auto max-w-screen-sm px-4 pt-6 flex-1 w-full">
-		{#if children}
-			{children?.()}
-		{/if}
+		<slot />
 	</main>
 	<footer
 		class="inset-x-0 bottom-0 mx-auto max-w-screen-sm px-4 py-6 text-xs text-base-content/60 text-center z-20 mt-auto"
