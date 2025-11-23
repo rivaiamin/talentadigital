@@ -1,12 +1,15 @@
 import { hash, verify } from '@node-rs/argon2';
-import { encodeBase32LowerCase } from '@oslojs/encoding';
+import { encodeBase32LowerCase, encodeHexLowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
+import { sha256 } from '@oslojs/crypto/sha2';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { generateUsername } from '$lib';
 import type { Actions, PageServerLoad } from './$types';
+
+const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
@@ -129,31 +132,46 @@ export const actions: Actions = {
 				counter++;
 			}
 
-			await db.insert(table.user).values({
-				id: userId,
-				fullName,
-				username: finalUsername,
-				contactNumber,
-				passwordHash
-			});
-
-			// Create initial talent profile linked to this user
-			await db.insert(table.talent).values({
-				id: userId, // use same id for 1:1 mapping convenience
-				userId: userId,
-				username: finalUsername,
-				name: fullName,
-				services: [],
-				status: 'online',
-				location: null,
-				contactNumber: contactNumber,
-				description: null,
-				portfolioUrl: null
-			});
-
+			// Generate session token before transaction
 			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+			const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+
+			// Use transaction to ensure atomicity of user, talent, and session creation
+			await db.transaction(async (tx) => {
+				// Insert user
+				await tx.insert(table.user).values({
+					id: userId,
+					fullName,
+					username: finalUsername,
+					contactNumber,
+					passwordHash
+				});
+
+				// Create initial talent profile linked to this user
+				await tx.insert(table.talent).values({
+					id: userId, // use same id for 1:1 mapping convenience
+					userId: userId,
+					username: finalUsername,
+					name: fullName,
+					services: [],
+					status: 'online',
+					location: null,
+					contactNumber: contactNumber,
+					description: null,
+					portfolioUrl: null
+				});
+
+				// Create session
+				await tx.insert(table.session).values({
+					id: sessionId,
+					userId: userId,
+					expiresAt
+				});
+			});
+
+			// Set session cookie after successful transaction
+			auth.setSessionTokenCookie(event, sessionToken, expiresAt);
 		} catch (error) {
 			console.error('Registration error:', error);
 			return fail(500, { message: 'Terjadi kesalahan saat mendaftar', action: 'register' });
